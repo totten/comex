@@ -1,9 +1,9 @@
 <?php
 namespace Extpub\Command;
 
-use Extpub\GitRepo;
 use Extpub\Util\ComposerJson;
 use Extpub\Util\Filesystem;
+use Extpub\Util\ScriptletDir;
 use Extpub\Util\Xml;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -11,8 +11,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 
 class ExtReconcileCommand extends BaseCommand {
-
-  const VENDOR = 'cxt';
 
   /**
    * @var Filesystem
@@ -58,10 +56,7 @@ class ExtReconcileCommand extends BaseCommand {
       throw new \Exception("Failed to parse info XML\n\n$error");
     }
 
-    $this->convertName_info2composer($output, $infoXml, $composerJson);
-    $this->convertDescription_info2composer($output, $infoXml, $composerJson);
-    $this->convertRequires_info2composer($output, $infoXml, $composerJson);
-    $this->convertRequires_composer2info($output, $composerJson, $infoXml);
+    ScriptletDir::create('reconcile')->run([$output, $infoXml, &$composerJson]);
 
     if ($input->getOption('dry-run')) {
       $output->writeln("<info>Write <comment>composer.json</comment>. (Dry Run)</info>");
@@ -79,120 +74,4 @@ class ExtReconcileCommand extends BaseCommand {
     }
   }
 
-  /**
-   * @param string $key
-   *   Ex: 'org.civicrm.foobar'
-   * @return string
-   *   Ex: 'cxt/org.civicrm.foobar'
-   */
-  protected function xmlKeyToComposerPkg($key) {
-    if (!preg_match('/^[a-z0-9\._\-]+$/', $key)) {
-      throw new \RuntimeException("Malformed key: $key");
-    }
-    return self::VENDOR . '/' . strtolower($key);
-  }
-
-  /**
-   * @param string $pkg
-   *   Ex: 'cxt/org.civicrm.foobar'
-   *   Ex: 'symfony/console'
-   * @return string|NULL
-   *   Ex: 'org.civicrm.foobar'
-   *   Ex: NULL
-   */
-  protected function composerPkgToXmlKey($pkg) {
-    list ($vendor, $name) = explode('/', $pkg);
-    if ($vendor !== self::VENDOR) {
-      throw new \RuntimeException("Cannot convert package ($pkg) to extension key");
-    }
-    if (!preg_match('/^[a-z0-9\._\-]+$/', $name)) {
-      throw new \RuntimeException("Malformed key: $name");
-    }
-    return $name;
-  }
-
-  /**
-   * @param string $pkg
-   *   Ex: 'cxt/org.civicrm.foobar'
-   * @return bool
-   */
-  protected function isExtPkg($pkg) {
-    return strpos($pkg, self::VENDOR . '/') === 0;
-  }
-
-  /**
-   * @param \SimpleXMLElement $infoXml
-   * @param array $composerJson
-   */
-  protected function convertName_info2composer(OutputInterface $output, $infoXml, &$composerJson) {
-    $key = (string) $infoXml->attributes()->key;
-    if (empty($key)) {
-      throw new \RuntimeException("info.xml does not specify a key");
-    }
-    $pkg = $this->xmlKeyToComposerPkg($key);
-
-    if (empty($composerJson['name'])) {
-      $composerJson['name'] = $pkg;
-    }
-    elseif ($composerJson['name'] === $pkg) {
-      return; // OK
-    }
-    else {
-      throw new \Exception("Names do not match: $key (info.xml) vs {$composerJson['name']} (composer.json)");
-    }
-  }
-
-  /**
-   * @param \SimpleXMLElement $infoXml
-   * @param array $composerJson
-   */
-  protected function convertDescription_info2composer(OutputInterface $output, $infoXml, &$composerJson) {
-    $desc = (string) $infoXml->description;
-    if (empty($desc)) {
-      $desc = '';
-    }
-
-    if (!isset($composerJson['description'])) {
-      $output->writeln("<info>In <comment>composer.json</comment>, add description.</info>", OutputInterface::VERBOSITY_VERBOSE);
-      $composerJson['description'] = $desc;
-    }
-  }
-
-  /**
-   * @param \SimpleXMLElement $infoXml
-   * @param array $composerJson
-   */
-  protected function convertRequires_info2composer(OutputInterface $output, $infoXml, &$composerJson) {
-    foreach ($infoXml->requires->ext as $ext) {
-      $pkg = $this->xmlKeyToComposerPkg((string) $ext);
-      $tgtVer = empty($ext['version']) ? '*' : (string) $ext['version'];
-      if (!isset($composerJson['requires'][$pkg])) {
-        $output->writeln("<info>In <comment>composer.json</comment>, add requirement <comment>$pkg</comment>:<comment>$tgtVer</comment>.</info>", OutputInterface::VERBOSITY_VERBOSE);
-        $composerJson['require'][$pkg] = $tgtVer;
-      }
-    }
-  }
-
-  /**
-   * @param array $composerJson
-   * @param \SimpleXMLElement $infoXml
-   */
-  protected function convertRequires_composer2info(OutputInterface $output, $composerJson, $infoXml) {
-    if (empty($composerJson['require'])) {
-      return;
-    }
-    foreach ($composerJson['require'] as $pkg => $ver) {
-      if (!$this->isExtPkg($pkg)) {
-        continue;
-      }
-      $ext = $this->composerPkgToXmlKey($pkg);
-      if (!$infoXml->xpath("requires[ext=\"$ext\"]")) {
-        $output->writeln("<info>In <comment>info.xml</comment>, add requirement <comment>$ext</comment>.</info>", OutputInterface::VERBOSITY_VERBOSE);
-        $extXml = $infoXml->requires->addChild('ext', $ext);
-        if ($ver !== '*') {
-          $extXml->addAttribute('version', $ver);
-        }
-      }
-    }
-  }
 }
