@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 
-class ExtReconcileCommand extends BaseCommand {
+class ReconcileCommand extends BaseCommand {
 
   /**
    * @var Filesystem
