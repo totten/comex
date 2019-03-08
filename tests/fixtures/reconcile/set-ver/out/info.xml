@@ -25,7 +25,7 @@
     <namespace>CRM/Foobar</namespace>
   </civix>
   <requires>
-    <ext>org.civicrm.flexmailer</ext>
     <ext version="~4.3">org.civicrm.api4</ext>
+    <ext>org.civicrm.flexmailer</ext>
   </requires>
 </extension>

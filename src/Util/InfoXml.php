@@ -20,6 +20,7 @@ class InfoXml {
       $version = (string) $extXml['version'];
       $requires[$extKey] = $version;
     }
+    ksort($requires);
     return $requires;
   }
 
@@ -33,6 +34,8 @@ class InfoXml {
     if ($infoXml->requires) {
       unset($infoXml->requires);
     }
+
+    ksort($requires);
 
     $requiresXml = $infoXml->addChild('requires');
     foreach ($requires as $key => $version) {
