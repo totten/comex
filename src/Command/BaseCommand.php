@@ -42,9 +42,8 @@ class BaseCommand extends Command {
           break;
 
         case 'git-feed':
-          $this->addOption('git-feed', NULL, InputOption::VALUE_REQUIRED, 'URL of the list of Git repos', 'https://civicrm.org/extdir/git-urls.json');
+          $this->addOption('git-feed', NULL, InputOption::VALUE_REQUIRED, 'URL of the list of Git repos (Ex: https://civicrm.org/extdir/git-urls.json)');
           break;
-
 
         case 'force':
           $this->addOption('force', 'f', InputOption::VALUE_NONE, 'If an extension folder already exists, download it anyway.');
@@ -66,6 +65,22 @@ class BaseCommand extends Command {
     return $this;
   }
 
+  /**
+   * @param array $names
+   *   List of standard arguments to enable.
+   * @return $this
+   */
+  protected function useArguments($names) {
+    foreach ($names as $name) {
+      switch ($name) {
+        case 'git-repos':
+          $this->addArgument('git-repos', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'List of git repos');
+          break;
+      }
+    }
+    return $this;
+  }
+
   protected function initialize(InputInterface $input, OutputInterface $output) {
     if ($this->getDefinition()->hasOption('web')) {
       $this->normalizeDirectoryOption($input, 'web');
@@ -75,7 +90,7 @@ class BaseCommand extends Command {
     }
   }
 
-    /**
+  /**
    * @param \Symfony\Component\Console\Input\InputInterface $input
    * @param \Symfony\Component\Console\Output\OutputInterface $output
    * @param $batch
