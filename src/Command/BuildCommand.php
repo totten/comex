@@ -75,6 +75,10 @@ class BuildCommand extends BaseCommand {
       'ZIP' => $input->getOption('web') . "dist/" . $input->getOption('ext') . '/' . "$id.zip"
     ];
     $args['ZIP_DIR'] = dirname($args['ZIP']);
+    $args['SRC_DIR'] = $args['TMP'];
+    if ($args['SUB_DIR']) {
+      $args['SRC_DIR'] .= DIRECTORY_SEPARATOR . $args['SUB_DIR'];
+    }
 
     if (file_exists($args['ZIP']) && !$input->getOption('force')) {
       $output->writeln("<info>Skip: File <comment>" . basename($args['ZIP']) . "</comment> already exists. Use --force to override.</info>");
@@ -90,8 +94,8 @@ class BuildCommand extends BaseCommand {
       $args['TMP']
     ));
     $batch->add('<info>Update <comment>info.xml</comment> and <comment>composer.json</comment></info>', new \Symfony\Component\Process\Process(
-      Process::interpolate('php @EXTPUB reconcile @TMP/@SUB_DIR --ver=@VER && git add info.xml composer.json && git commit -m "Auto-update metadata"', $args),
-      $args['TMP'] . '/' . $args['SUB_DIR']
+      Process::interpolate('php @EXTPUB reconcile @SRC_DIR --ver=@VER && git add info.xml composer.json && git commit -m "Auto-update metadata"', $args),
+      $args['SRC_DIR']
     ));
     if (empty($args['SUB_DIR']) || $args['SUB_DIR'] === '.') {
       $batch->add("<info>Generate <comment>" . basename($args['ZIP']) . "</comment></info>", new \Symfony\Component\Process\Process(
