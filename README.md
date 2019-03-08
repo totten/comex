@@ -11,3 +11,15 @@ This provides a system which:
 
 ## Requirements
 
+## Reference: Git Feed Format
+
+```
+[
+  {
+    "key": "...extension key...",
+    "git_url": "...url...",
+    "ready": "ready|not_ready|...",
+    "path": "...optional relative path, within the repo..."
+  }
+]
+```
