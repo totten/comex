@@ -27,7 +27,7 @@ class ExtReconcileCommand extends BaseCommand {
 
   protected function configure() {
     $this
-      ->setName('ext:reconcile')
+      ->setName('reconcile')
       ->setDescription('Given an extension, reconcile info.xml and composer.json.')
       ->setHelp('Given an extension, reconcile info.xml and composer.json.
 
