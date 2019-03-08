@@ -102,6 +102,9 @@ class BaseCommand extends Command {
   }
 
   protected function initialize(InputInterface $input, OutputInterface $output) {
+    if ($this->getDefinition()->hasOption('dry-run') && $input->getOption('dry-run')) {
+      $output->writeln('<info>NOTE:</info> Executing a dry-run');
+    }
     if ($this->getDefinition()->hasOption('web-root')) {
       $this->normalizeDirectoryOption($input, 'web-root');
     }
