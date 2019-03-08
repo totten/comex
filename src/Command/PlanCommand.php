@@ -25,7 +25,7 @@ class PlanCommand extends BaseCommand {
 
   protected function configure() {
     $this
-      ->useOptions(['git-feed', 'limit'])
+      ->useOptions(['git-feed', 'limit', 'web-root'])
       ->useArguments(['git-repos'])
       ->setName('plan')
       ->setDescription('Scan a list of repos and plan the build-steps')
@@ -72,11 +72,12 @@ without any special authorization.
       $versions = $this->findVersions($repo['git_url']);
       foreach ($versions as $version => $commit) {
         // $id = sha1(implode(';;', [$repo['key'], $repo['git_url'], $commit, $version]));
-        $task = sprintf('extpub build --ext=%s --git-url=%s --commit=%s --ver=%s',
+        $task = sprintf('extpub build --ext=%s --git-url=%s --commit=%s --ver=%s --web-root=%s',
           escapeshellarg($repo['key']),
           escapeshellarg($repo['git_url']),
           escapeshellarg($commit),
-          escapeshellarg($version)
+          escapeshellarg($version),
+          escapeshellarg($input->getOption('web-root'))
         );
         if (!empty($repo['path'])) {
           $task .= sprintf(' --sub-dir=%s', escapeshellarg($repo['path']));
