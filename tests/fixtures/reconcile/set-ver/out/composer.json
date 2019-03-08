@@ -1,0 +1,11 @@
+{
+    "name": "cxt/org.example.set-ver",
+    "description": "Install the set-ver extension to mess things up",
+    "version": "2.0.2",
+    "license": "AGPL-3.0",
+    "require": {
+        "cxt/org.civicrm.api4": "~4.3",
+        "cxt/org.civicrm.flexmailer": "*",
+        "intervention/image": "^2.4"
+    }
+}

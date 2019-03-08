@@ -9,17 +9,20 @@ return function(OutputInterface $output, SimpleXMLElement $infoXml, &$composerJs
   if (empty($composerJson['require'])) {
     return;
   }
+
+  $infoRequires = \Extpub\Util\InfoXml::getRequires($infoXml);
+
   foreach ($composerJson['require'] as $pkg => $ver) {
     if (!Naming::isExtPkg($pkg)) {
       continue;
     }
+
     $ext = Naming::composerPkgToXmlKey($pkg);
-    if (!$infoXml->xpath("requires[ext=\"$ext\"]")) {
+    if (empty($infoRequires[$ext])) {
       $output->writeln("<info>In <comment>info.xml</comment>, add requirement <comment>$ext</comment>.</info>", OutputInterface::VERBOSITY_VERBOSE);
-      $extXml = $infoXml->requires->addChild('ext', $ext);
-      if ($ver !== '*') {
-        $extXml->addAttribute('version', $ver);
-      }
+      $infoRequires[$ext] = ($ver === '*') ? '' : $ver;
     }
   }
+
+  \Extpub\Util\InfoXml::setRequires($infoXml, $infoRequires);
 };
