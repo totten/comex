@@ -25,41 +25,61 @@ class BaseCommand extends Command {
   protected function useOptions($names) {
     foreach ($names as $name) {
       switch ($name) {
-        case 'web':
-          $this->addOption('web', 'r', InputOption::VALUE_REQUIRED, 'Location of the web root. Ex: /srv/buildkit/build', dirname(dirname(EXTPUB_FILE)) . '/web');
-          break;
-
-        case 'version':
-          $this->addOption('version', NULL, InputOption::VALUE_OPTIONAL, 'Intended version number');
-          break;
 
         case 'download-url':
           $this->addOption('download-url', NULL, InputOption::VALUE_REQUIRED, 'Intended public URL');
+          break;
+
+        case 'commit':
+          $this->addOption('commit', NULL, InputOption::VALUE_OPTIONAL, 'Intended git commit/revision');
           break;
 
         case 'dry-run':
           $this->addOption('dry-run', 'N', InputOption::VALUE_NONE, 'Do not execute');
           break;
 
-        case 'git-feed':
-          $this->addOption('git-feed', NULL, InputOption::VALUE_REQUIRED, 'URL of the list of Git repos (Ex: https://civicrm.org/extdir/git-urls.json)');
+        case 'ext':
+          $this->addOption('ext', NULL, InputOption::VALUE_OPTIONAL, 'Fully qualified extension name');
           break;
 
         case 'force':
           $this->addOption('force', 'f', InputOption::VALUE_NONE, 'If an extension folder already exists, download it anyway.');
           break;
 
-        case 'timeout':
-          $this->addOption('timeout', NULL, InputOption::VALUE_REQUIRED, 'Max number of seconds to spend on any individual task', 600);
+        case 'git-feed':
+          $this->addOption('git-feed', NULL, InputOption::VALUE_REQUIRED, 'URL of the list of Git repos (Ex: https://civicrm.org/extdir/git-urls.json)');
+          break;
+
+        case 'git-url':
+          $this->addOption('git-url', NULL, InputOption::VALUE_REQUIRED, 'URL of the list of a git repo');
           break;
 
         case 'limit':
           $this->addOption('limit', NULL, InputOption::VALUE_OPTIONAL, 'Max number of items to process');
           break;
 
+        case 'sub-dir':
+          $this->addOption('sub-dir', NULL, InputOption::VALUE_REQUIRED, 'Subdirectory of the git repo which contains the extension');
+          break;
+
+        case 'timeout':
+          $this->addOption('timeout', NULL, InputOption::VALUE_REQUIRED, 'Max number of seconds to spend on any individual task', 600);
+          break;
+
+        case 'ver':
+          $this->addOption('ver', NULL, InputOption::VALUE_OPTIONAL, 'Intended version number');
+          break;
+
+        case 'web':
+          $this->addOption('web', 'r', InputOption::VALUE_REQUIRED, 'Location of the web root. Ex: /srv/buildkit/build', dirname(dirname(EXTPUB_FILE)) . '/web');
+          break;
+
         case 'web-url':
           $this->addOption('web-url', NULL, InputOption::VALUE_REQUIRED, 'Public web URL');
           break;
+
+        default:
+          throw new \RuntimeException("Cannot define option: $name");
       }
     }
     return $this;
