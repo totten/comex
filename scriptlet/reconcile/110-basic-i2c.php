@@ -8,6 +8,7 @@ return function(OutputInterface $output, SimpleXMLElement $infoXml, &$composerJs
   $map = [
     'description' => 'description',
     'license' => 'license',
+    'version' => 'version',
   ];
   foreach ($map as $iField => $cField) {
     $value = (string) $infoXml->{$iField};
