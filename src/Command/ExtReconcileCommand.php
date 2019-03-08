@@ -34,7 +34,7 @@ class ExtReconcileCommand extends BaseCommand {
   Example: extpub ext:reconcile /var/www/ext/myextension
       ')
       ->addArgument('ext', InputArgument::REQUIRED, 'Full path to the extension source code');
-    $this->useOptions(['dry-run']);
+    $this->useOptions(['dry-run', 'ver']);
   }
 
   protected function execute(InputInterface $input, OutputInterface $output) {
@@ -56,6 +56,10 @@ class ExtReconcileCommand extends BaseCommand {
       throw new \Exception("Failed to parse info XML\n\n$error");
     }
 
+    if ($input->getOption('ver')) {
+      $this->setField($infoXml, 'version', $input->getOption('ver'));
+    }
+
     ScriptletDir::create('reconcile')->run([$output, $infoXml, &$composerJson]);
 
     if ($input->getOption('dry-run')) {
@@ -71,6 +75,16 @@ class ExtReconcileCommand extends BaseCommand {
 
       $output->writeln("<info>Write <comment>info.xml</comment>.</info>");
       file_put_contents($infoXmlFile, Xml::prettyPrint($infoXml));
+    }
+  }
+
+  protected function setField($info, $fieldXpath, $value) {
+    $elements = $info->xpath($fieldXpath);
+    if (empty($elements)) {
+      throw new \RuntimeException("Error: Path (" . $fieldXpath . ") did not match any elements.");
+    }
+    foreach ($elements as $element) {
+      $element->{0} = $value;
     }
   }
 
