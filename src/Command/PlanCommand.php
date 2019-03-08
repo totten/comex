@@ -25,7 +25,7 @@ class PlanCommand extends BaseCommand {
 
   protected function configure() {
     $this
-      ->useOptions(['git-feed', 'limit', 'web-url'])
+      ->useOptions(['git-feed', 'limit'])
       ->useArguments(['git-repos'])
       ->setName('plan')
       ->setDescription('Scan a list of repos and plan the build-steps')
@@ -49,10 +49,6 @@ without any special authorization.
   }
 
   protected function execute(InputInterface $input, OutputInterface $output) {
-    if (!$input->getOption('web-url')) {
-      throw new \Exception("Missing required parameter: --web-url");
-    }
-
     $repos = $this->pickRepos($input, $output);
 
     if ($output->isVeryVerbose()) {
@@ -76,14 +72,14 @@ without any special authorization.
       $versions = $this->findVersions($repo['git_url']);
       foreach ($versions as $version => $commit) {
         // $id = sha1(implode(';;', [$repo['key'], $repo['git_url'], $commit, $version]));
-        $task = sprintf('extpub build --ext=%s --git-url=%s --rev=%s --version=%s --download-url=%s',
+        $task = sprintf('extpub build --ext=%s --git-url=%s --commit=%s --ver=%s',
           escapeshellarg($repo['key']),
           escapeshellarg($repo['git_url']),
           escapeshellarg($commit),
-          escapeshellarg($version),
-          escapeshellarg($input->getOption('web-url') . 'dist/{{EXT}}/{{EXT}}-{{VERSION}}-{{ID}}.zip'));
+          escapeshellarg($version)
+        );
         if (!empty($repo['path'])) {
-          $task .= sprintf(' --subdir=%s', escapeshellarg($repo['path']));
+          $task .= sprintf(' --sub-dir=%s', escapeshellarg($repo['path']));
         }
         $tasks[] = $task;
       }
