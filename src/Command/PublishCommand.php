@@ -23,11 +23,11 @@ class PublishCommand extends BaseCommand {
       ->setName('publish')
       ->setDescription('Scan the distribution tree and compile a list of packages')
       ->setHelp('Scan the distribution tree and compile a list of packages');
-    $this->useOptions(['web', 'web-url']);
+    $this->useOptions(['web-root', 'web-url']);
   }
 
   protected function execute(InputInterface $input, OutputInterface $output) {
-    $webRoot = $input->getOption('web');
+    $webRoot = $input->getOption('web-root');
 
     $output->writeln("<info>Search <comment>$webRoot/dist</comment> for <comment>*.composer.json</comment></info>");
     $this->compileMasterIndex($output,

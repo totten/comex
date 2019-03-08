@@ -70,8 +70,8 @@ class BaseCommand extends Command {
           $this->addOption('ver', NULL, InputOption::VALUE_OPTIONAL, 'Intended version number');
           break;
 
-        case 'web':
-          $this->addOption('web', 'r', InputOption::VALUE_REQUIRED, 'Location of the web root. Ex: /srv/buildkit/build', dirname(dirname(EXTPUB_FILE)) . '/web');
+        case 'web-root':
+          $this->addOption('web-root', 'r', InputOption::VALUE_REQUIRED, 'Location of the web root. Ex: /srv/buildkit/build', dirname(dirname(EXTPUB_FILE)) . '/web');
           break;
 
         case 'web-url':
@@ -102,8 +102,8 @@ class BaseCommand extends Command {
   }
 
   protected function initialize(InputInterface $input, OutputInterface $output) {
-    if ($this->getDefinition()->hasOption('web')) {
-      $this->normalizeDirectoryOption($input, 'web');
+    if ($this->getDefinition()->hasOption('web-root')) {
+      $this->normalizeDirectoryOption($input, 'web-root');
     }
     if ($this->getDefinition()->hasOption('web-url')) {
       $this->normalizeBaseUrlOption($input, 'web-url');

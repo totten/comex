@@ -25,7 +25,7 @@ class BuildCommand extends BaseCommand {
 
   protected function configure() {
     $this
-      ->useOptions(['ext', 'git-url', 'commit', 'ver', 'sub-dir', 'force', 'dry-run', 'timeout', 'web'])
+      ->useOptions(['ext', 'git-url', 'commit', 'ver', 'sub-dir', 'force', 'dry-run', 'timeout', 'web-root'])
       ->setName('build')
       ->setDescription('Build a zip file for an extension (from git)')
       ->setHelp('Build a zip file for an extension (from git)');
@@ -71,8 +71,8 @@ class BuildCommand extends BaseCommand {
       'SUB_DIR' => $input->getOption('sub-dir'),
       'ID' => $id,
       'TMP' => sys_get_temp_dir() . DIRECTORY_SEPARATOR . $id . '-' . rand(0, 100000),
-      'WEB_ROOT' => $input->getOption('web'),
-      'ZIP' => $input->getOption('web') . "dist/" . $input->getOption('ext') . '/' . "$id.zip"
+      'WEB_ROOT' => $input->getOption('web-root'),
+      'ZIP' => $input->getOption('web-root') . "dist/" . $input->getOption('ext') . '/' . "$id.zip"
     ];
     $args['ZIP_DIR'] = dirname($args['ZIP']);
     $args['SRC_DIR'] = $args['TMP'];
