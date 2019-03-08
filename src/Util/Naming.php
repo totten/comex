@@ -1,7 +1,12 @@
 <?php
 namespace Extpub\Util;
 
-
+/**
+ * Class Naming
+ * @package Extpub\Util
+ *
+ * Helpers for manipulating package/extension names.
+ */
 class Naming {
 
   const VENDOR = 'cxt';
@@ -45,6 +50,16 @@ class Naming {
    */
   public static function isExtPkg($pkg) {
     return strpos($pkg, self::VENDOR . '/') === 0;
+  }
+
+  /**
+   * @param string $key
+   * @return bool
+   *   TRUE if $key is a well-formed extension key.
+   */
+  public static function isValidKey($key) {
+    return preg_match(';^[a-z][a-z0-9\.\-_]*$;', $key)
+      && (strpos($key, '..') === FALSE);
   }
 
 }

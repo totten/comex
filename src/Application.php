@@ -36,6 +36,7 @@ class Application extends \Symfony\Component\Console\Application {
     $commands = array();
     $commands[] = new \Extpub\Command\PublishCommand();
     $commands[] = new \Extpub\Command\PlanCommand();
+    $commands[] = new \Extpub\Command\BuildCommand();
     $commands[] = new \Extpub\Command\ExtReconcileCommand();
     return $commands;
   }
