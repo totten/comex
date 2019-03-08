@@ -28,7 +28,8 @@ class PlanCommand extends BaseCommand {
       ->useOptions(['git-feed', 'limit', 'web-url'])
       ->useArguments(['git-repos'])
       ->setName('plan')
-      ->setDescription('Scan a list of repos and plan the build-steps
+      ->setDescription('Scan a list of repos and plan the build-steps')
+      ->setHelp('Scan a list of repos and plan the build-steps
 
 You may specify the target repos using a JSON feed:
 
@@ -48,7 +49,7 @@ without any special authorization.
   }
 
   protected function execute(InputInterface $input, OutputInterface $output) {
-    if (! $input->getOption('web-url')) {
+    if (!$input->getOption('web-url')) {
       throw new \Exception("Missing required parameter: --web-url");
     }
 
