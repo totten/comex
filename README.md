@@ -27,7 +27,7 @@ This provides a system which:
 ./bin/extpub plan -v ~/bknix/build/dmaster/sites/all/modules/civicrm/ext/{api4,flexmailer,mosaico}
 
 ## (Dry run) Build the extension 'org.civicrm.api4' at version 4.1.0.
-./bin/extpub build -v --ext='org.civicrm.api4' --git-url='https://github.com/civicrm/org.civicrm.api4'  --commit='d5a853a6f4d1cad11e8655755b329f15eb3fc27b' --ver='4.1.0' -N
+./bin/extpub build -v --ext='org.civicrm.api4' --git-url='https://github.com/civicrm/org.civicrm.api4'  --commit='d5a853a6f4d1cad11e8655755b329f15eb3fc27b' --ver='4.1.0' -f -N
 
 ## (Real run) Build the extension 'org.civicrm.api4' at version 4.1.0. Overwrite any existing zip files.
 ./bin/extpub build -v --ext='org.civicrm.api4' --git-url='https://github.com/civicrm/org.civicrm.api4'  --commit='d5a853a6f4d1cad11e8655755b329f15eb3fc27b' --ver='4.1.0' -f
