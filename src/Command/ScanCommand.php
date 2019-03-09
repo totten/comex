@@ -1,7 +1,6 @@
 <?php
 namespace Comex\Command;
 
-use Comex\GitRepo;
 use Comex\Util\Filesystem;
 use Comex\Util\GitRepoNormalizer;
 use Symfony\Component\Console\Input\InputInterface;
