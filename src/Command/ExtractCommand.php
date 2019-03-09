@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
-class PublishCommand extends BaseCommand {
+class ExtractCommand extends BaseCommand {
 
   /**
    * @param string|NULL $name
@@ -23,48 +23,25 @@ class PublishCommand extends BaseCommand {
 
   protected function configure() {
     $this
-      ->setName('publish')
-      ->setDescription('Scan the distribution tree and compile a list of packages')
-      ->setHelp('Scan the distribution tree and compile a list of packages
+      ->setName('extract')
+      ->setDescription('Scan *.zip files. Extract and filter the composer.json+info.xml')
+      ->setHelp('Scan web/dist/**.zip files. Extract metadata, augment, and write to web/meta.
 
-This command has two phases:
-
-1. Extraction: Scan web/dist/**.zip for composer.json and info.xml files.
-   Filter the content and write to web/meta/
-2. Aggregation: Scan web/meta/**/composer.json. Combine to form packages.json.
+Note: 
+ - Filters are defined in scriptlet/extract-info and scriptlet/extract-composer.
+ - By default, we do not re-extract files from the past. (Use --force to overwrite.)
 ');
     $this->useOptions(['force', 'web-root', 'web-url']);
   }
 
   protected function execute(InputInterface $input, OutputInterface $output) {
-    if (empty($input->getOption('web-root')) || empty($input->getOption('web-url'))) {
-      throw new \Exception("Both --web-root and --web-url are required parameters.");
-    }
-
+    $this->checkRequiredInputs($input, ['web-root', 'web-url']);
     $webRoot = $input->getOption('web-root');
 
     $output->writeln("<info>Search <comment>*.zip</comment> for <comment>composer.json</comment> and <comment>info.xml</comment></info>");
     $this->extractMetadata($input, $output, "{$webRoot}dist/", "{$webRoot}meta/", $input->getOption('force'));
-
-    $output->writeln("<info>Aggregate <comment>*.composer.json</comment></info>");
-    $this->compileMasterIndex($output,
-      Finder::create()->in("$webRoot/meta")->name('composer.json'),
-      "{$webRoot}packages.json");
   }
 
-  /**
-   * @param \Symfony\Component\Console\Output\OutputInterface $output
-   * @param Finder $finder
-   *   List of composer.json files.
-   * @param string $packagesJsonFile
-   */
-  protected function compileMasterIndex(OutputInterface $output, $finder, $packagesJsonFile) {
-    // TODO:: Splitting/batching (by folder, name, or date) so that checksums are more stable and cache-friendly...
-    $pkgs = $this->readComposerJsonList($finder);
-    $packagesJson = ['packages' => $this->indexPackages($pkgs)];
-    $output->writeln("<info>Write <comment>$packagesJsonFile</comment></info>");
-    $this->putFile($packagesJsonFile, json_encode($packagesJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-  }
 
   /**
    * @param \Symfony\Component\Console\Input\InputInterface $input
@@ -104,69 +81,21 @@ This command has two phases:
 
       $content = file_get_contents("zip://$zipFile#{$zipIntPrefix}composer.json");
       if (!empty($content)) {
-        $output->writeln("<info>Extract <comment>" . basename("$zipFile") . "</comment> > <comment>composer.json</comment></info>", OutputInterface::VERBOSITY_VERBOSE);
+        $output->writeln("<info>Found <comment>" . basename("$zipFile") . "</comment>. Extract and filter <comment>composer.json</comment></info>");
         $this->putFile($context['outComposerJson'], $this->filterComposerJson($output, $content, $context));
       }
 
       $content = file_get_contents("zip://$zipFile#{$zipIntPrefix}info.xml");
       if (!empty($content)) {
-        $output->writeln("<info>Extract <comment>" . basename("$zipFile") . "</comment> > <comment>info.xml</comment></info>", OutputInterface::VERBOSITY_VERBOSE);
+        $output->writeln("<info>Found <comment>" . basename("$zipFile") . "</comment>. Extract and filter <comment>info.xml</comment></info>");
         $this->putFile($context['outInfoXml'], $this->filterInfoXml($output, $content, $context));
       }
     }
   }
 
-  /**
-   * Parse all the matching JSON files.
-   *
-   * @param \Symfony\Component\Finder\Finder $f
-   * @return array
-   *   Aggregated data from all the JSON files.
-   * @throws \Exception
-   */
-  protected function readComposerJsonList(Finder $f) {
-    $pkgs = [];
-    foreach ($f->files() as $file) {
-      /** @var SplFileInfo $file */
-      $pkg = json_decode($file->getContents(), 1);
-      if ($pkg === NULL) {
-        throw new \Exception("Malformatted JSON file: $file");
-      }
-      $pkgs[] = $pkg;
-    }
-    usort($pkgs, function ($a, $b) {
-      $aKey = $a['name'] . ';;' . $a['version'];
-      $bKey = $b['name'] . ';;' . $b['version'];
-      return strcmp($aKey, $bKey);
-    });
-    return $pkgs;
-  }
-
-  /**
-   * @param array $pkgs
-   *   List of packages. (Each item is a composer.json record.)
-   * @return array
-   *   List of packages, indexed by name and version.
-   *   Ex: $idx['foo/bar']['1.2.3'] = $composerJson.
-   */
-  protected function indexPackages($pkgs) {
-    $idx = [];
-
-    foreach ($pkgs as $pkg) {
-      $idx[$pkg['name']][$pkg['version']] = $pkg;
-    }
-
-    ksort($idx);
-    foreach (array_keys($idx) as $idxKey) {
-      ksort($idx[$idxKey]);
-    }
-
-    return $idx;
-  }
-
   protected function filterComposerJson(OutputInterface $output, $content, $context) {
     $composerJson = json_decode($content, 1);
-    ScriptletDir::create('publish-composer')->run([$output, &$composerJson, $context]);
+    ScriptletDir::create('extract-composer')->run([$output, &$composerJson, $context]);
     return ComposerJson::prettyPrint($composerJson);
   }
 
@@ -177,14 +106,16 @@ This command has two phases:
       throw new \Exception("Failed to parse info XML\n\n$error");
     }
 
-    ScriptletDir::create('publish-info')->run([$output, $infoXml, $context]);
+    ScriptletDir::create('extract-info')->run([$output, $infoXml, $context]);
     return Xml::prettyPrint($infoXml);
   }
 
   protected function putFile($path, $content) {
     $parent = dirname($path);
     if (!is_dir($parent)) {
-      mkdir($parent, 0777, TRUE);
+      if (!mkdir($parent, 0777, TRUE)) {
+        throw new \RuntimeException("Failed to mkdir: $parent");
+      }
     }
     file_put_contents($path, $content);
   }

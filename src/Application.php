@@ -34,10 +34,11 @@ class Application extends \Symfony\Component\Console\Application {
    */
   public function createCommands() {
     $commands = array();
-    $commands[] = new \Extpub\Command\PublishCommand();
     $commands[] = new \Extpub\Command\PlanCommand();
     $commands[] = new \Extpub\Command\BuildCommand();
     $commands[] = new \Extpub\Command\ReconcileCommand();
+    $commands[] = new \Extpub\Command\ExtractCommand();
+    $commands[] = new \Extpub\Command\CompileCommand();
     return $commands;
   }
 

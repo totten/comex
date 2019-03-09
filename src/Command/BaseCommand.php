@@ -151,4 +151,17 @@ class BaseCommand extends Command {
     }
   }
 
+  /**
+   * @param \Symfony\Component\Console\Input\InputInterface $input
+   * @param $requiredInputs
+   * @throws \Exception
+   */
+  protected function checkRequiredInputs(InputInterface $input, $requiredInputs) {
+    foreach ($requiredInputs as $option) {
+      if (empty($input->getOption($option))) {
+        throw new \Exception("Missing required parameter: --$option");
+      }
+    }
+  }
+
 }
