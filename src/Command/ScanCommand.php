@@ -5,6 +5,7 @@ use Comex\GitRepo;
 use Comex\Util\Filesystem;
 use Comex\Util\GitRepoNormalizer;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 
@@ -28,16 +29,21 @@ class ScanCommand extends BaseCommand {
       ->useOptions(['git-feed', 'limit', 'web-root'])
       ->useArguments(['git-repos'])
       ->setName('scan')
+      ->addOption('print', 'p', InputOption::VALUE_OPTIONAL, 'Print a list of the planned tasks. (Optionally, specify format: b|bash|j|json|x|xargs')
       ->setDescription('Scan a list of repos and plan the build-steps')
       ->setHelp('Scan a list of repos and plan the build-steps
 
 You may specify the target repos using a JSON feed:
 
-   comex scan --git-feed=https://civicrm.org/extdir/git-urls.json
+  comex scan --git-feed=https://civicrm.org/extdir/git-urls.json
 
 Or you may specify target repos using file paths:
 
   comex scan ~/src/{first,second,third}
+
+The command prints a list of tasks. You can pipe them to a task runner, such as xargs:
+
+  comex scan ~/src/{first,second,third} -px | xargs -L1 -P4 ./bin/comex
 
 Note: There are security implications to correctly determining the
 extension-key for which repo is allowed to publish extensions.
@@ -83,11 +89,40 @@ without any special authorization.
         if (!empty($repo['path'])) {
           $task .= sprintf(' --sub-dir=%s', escapeshellarg($repo['path']));
         }
-        $tasks[] = $task;
+        $tasks[] = [
+          'title' => sprintf('Build %s v%s', $repo['key'], $version),
+          'cmd' => $task,
+        ];
       }
     }
-    foreach ($tasks as $task) {
-      $output->writeln($task, OutputInterface::OUTPUT_RAW);
+
+    $print = $this->parseOptionalOption($input, ['--print', '-p'], 'bash', 'bash');
+    switch ($print) {
+      case '';
+      case NULL:
+        break;
+
+      case 'b':
+      case 'bash':
+        foreach ($tasks as $task) {
+          $output->writeln($task['cmd'], OutputInterface::OUTPUT_RAW);
+        }
+        break;
+
+      case 'j':
+      case 'json':
+        $output->writeln(json_encode($tasks, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES), OutputInterface::OUTPUT_RAW);
+        break;
+
+      case 'x':
+      case 'xargs':
+        foreach ($tasks as $task) {
+          echo preg_replace('/^comex /', '', $task['cmd']) . "\n";
+        }
+        break;
+
+      default:
+        throw new \Exception("Unrecognized print format");
     }
   }
 
