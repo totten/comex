@@ -50,10 +50,11 @@ without any special authorization.
 
   protected function execute(InputInterface $input, OutputInterface $output) {
     $repos = $this->pickRepos($input, $output);
+    $errorOutput = $this->getErrorOutput($output);
 
     if ($output->isVeryVerbose()) {
-      $output->getErrorOutput()->writeln("<info>Scanning repos:</info>");
-      $output->getErrorOutput()->writeln(json_encode($repos, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES), OutputInterface::OUTPUT_RAW);
+      $errorOutput->writeln("<info>Scanning repos:</info>");
+      $errorOutput->writeln(json_encode($repos, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES), OutputInterface::OUTPUT_RAW);
     }
 
     if (empty($repos)) {
@@ -64,10 +65,10 @@ without any special authorization.
     $tasks = [];
     foreach ($repos as $repo) {
       if (!empty($repo['path'])) {
-        $output->getErrorOutput()->writeln("<info>Scan <comment>{$repo['git_url']}</comment> (<comment>{$repo['path']}</comment>)</info>", OutputInterface::VERBOSITY_VERBOSE);
+        $errorOutput->writeln("<info>Scan <comment>{$repo['git_url']}</comment> (<comment>{$repo['path']}</comment>)</info>", OutputInterface::VERBOSITY_VERBOSE);
       }
       else {
-        $output->getErrorOutput()->writeln("<info>Scan <comment>{$repo['git_url']}</comment></info>", OutputInterface::VERBOSITY_VERBOSE);
+        $errorOutput->writeln("<info>Scan <comment>{$repo['git_url']}</comment></info>", OutputInterface::VERBOSITY_VERBOSE);
       }
       $versions = $this->findVersions($repo['git_url']);
       foreach ($versions as $version => $commit) {
@@ -86,7 +87,7 @@ without any special authorization.
       }
     }
     foreach ($tasks as $task) {
-      echo "$task\n";
+      $output->writeln($task, OutputInterface::OUTPUT_RAW);
     }
   }
 
@@ -113,11 +114,11 @@ without any special authorization.
       $repo['path'] = isset($repo['path']) ? $repo['path'] : '';
 
       if (!preg_match(';^https?://;', $repo['git_url'])) {
-        $output->getErrorOutput()
+        $this->getErrorOutput($output)
           ->writeln("<info>Skipped malformed URL <comment>{$repo['git_url']}</comment></info>", OutputInterface::VERBOSITY_VERBOSE);
       }
       elseif ($repo['ready'] !== $readyStatus) {
-        $output->getErrorOutput()
+        $this->getErrorOutput($output)
           ->writeln("<info>Skipped <comment>{$repo['git_url']}</comment></info>", OutputInterface::VERBOSITY_VERBOSE);
       }
       else {
@@ -224,6 +225,17 @@ without any special authorization.
       return $repos;
     }
     return $repos;
+  }
+
+  /**
+   * @param \Symfony\Component\Console\Output\OutputInterface $output
+   * @return \Symfony\Component\Console\Output\OutputInterface
+   */
+  protected function getErrorOutput(OutputInterface $output) {
+    return is_callable([
+      $output,
+      'getErrorOutput'
+    ]) ? $output->getErrorOutput() : $output;
   }
 
 }
