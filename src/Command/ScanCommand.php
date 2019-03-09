@@ -33,11 +33,11 @@ class ScanCommand extends BaseCommand {
 
 You may specify the target repos using a JSON feed:
 
-   comex plan --git-feed=https://civicrm.org/extdir/git-urls.json
+   comex scan --git-feed=https://civicrm.org/extdir/git-urls.json
 
 Or you may specify target repos using file paths:
 
-  comex plan ~/src/{first,second,third}
+  comex scan ~/src/{first,second,third}
 
 Note: There are security implications to correctly determining the
 extension-key for which repo is allowed to publish extensions.

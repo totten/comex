@@ -31,7 +31,7 @@ class ReconcileCommand extends BaseCommand {
       ->setDescription('Given an extension, reconcile info.xml and composer.json.')
       ->setHelp('Given an extension, reconcile info.xml and composer.json.
 
-  Example: comex ext:reconcile /var/www/ext/myextension
+  Example: comex reconcile /var/www/ext/myextension
       ')
       ->addArgument('ext', InputArgument::REQUIRED, 'Full path to the extension source code');
     $this->useOptions(['dry-run', 'ver']);
