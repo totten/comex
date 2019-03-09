@@ -65,8 +65,8 @@ class Xml {
    */
   public static function prettyPrint($simpleXml) {
     $dom = new \DOMDocument("1.0");
-    $dom->preserveWhiteSpace = false;
-    $dom->formatOutput = true;
+    $dom->preserveWhiteSpace = FALSE;
+    $dom->formatOutput = TRUE;
     $dom->loadXML($simpleXml->asXML());
     return $dom->saveXML();
   }
