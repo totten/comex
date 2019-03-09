@@ -2,12 +2,6 @@
 
 namespace Comex\Util;
 
-use CiviExtManagerBundle\Event\FindExtensionsEvent;
-use CiviExtManagerBundle\Event\FindGitReposEvent;
-use CiviExtManagerBundle\Exception\XmlParseException;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-
 /**
  * Class GitRepoNormalizer
  *
