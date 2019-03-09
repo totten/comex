@@ -90,7 +90,7 @@ class BuildCommand extends BaseCommand {
       Process::interpolate('mkdir @TMP; cd @TMP; git init', $args)
     ));
     $batch->add("<info>Get version <comment>{$args['VER']}</comment> (commit <comment>{$args['COMMIT']}</comment>)</info>", new \Symfony\Component\Process\Process(
-      Process::interpolate('git remote add origin @GIT_URL && git fetch --depth 1 origin @COMMIT && git checkout @COMMIT', $args),
+      Process::interpolate('git remote add origin @GIT_URL && git fetch --depth 1 origin @COMMIT && git checkout -b @VER @COMMIT', $args),
       $args['TMP']
     ));
     $batch->add('<info>Update <comment>info.xml</comment> and <comment>composer.json</comment></info>', new \Symfony\Component\Process\Process(
@@ -99,7 +99,7 @@ class BuildCommand extends BaseCommand {
     ));
     if (empty($args['SUB_DIR']) || $args['SUB_DIR'] === '.') {
       $batch->add("<info>Generate <comment>" . basename($args['ZIP']) . "</comment></info>", new \Symfony\Component\Process\Process(
-        Process::interpolate('mkdir -p @ZIP_DIR && git archive HEAD --format zip > @ZIP', $args),
+        Process::interpolate('mkdir -p @ZIP_DIR && git archive HEAD --format zip -o @ZIP', $args),
         $args['TMP']
       ));
     }
