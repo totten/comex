@@ -1,5 +1,5 @@
 <?php
-namespace Extpub\Util;
+namespace Comex\Util;
 
 class ArrayUtil {
   public static  function collect($array, $index) {

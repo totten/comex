@@ -1,9 +1,9 @@
 <?php
-namespace Extpub\Util;
+namespace Comex\Util;
 
 /**
  * Class ScriptletDir
- * @package Extpub\Util
+ * @package Comex\Util
  *
  * A scriptlet directory is a collection of small scripts... organized in...
  * a... directory. Each "*.php" file in the directory contains a callback

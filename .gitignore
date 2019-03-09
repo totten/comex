@@ -1,5 +1,4 @@
 /vendor
 /.idea
 *~
-/bin/extpub.phar
 /bin/phpunit

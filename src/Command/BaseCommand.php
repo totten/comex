@@ -1,14 +1,14 @@
 <?php
-namespace Extpub\Command;
+namespace Comex\Command;
 
-use Extpub\Application;
+use Comex\Application;
 use Symfony\Component\Console\Command\Command;
-use Extpub\GitRepo;
-use Extpub\Util\ArrayUtil;
-use Extpub\Util\Filesystem;
-use Extpub\Util\Process as ProcessUtil;
-use Extpub\Util\Process;
-use Extpub\Util\ProcessBatch;
+use Comex\GitRepo;
+use Comex\Util\ArrayUtil;
+use Comex\Util\Filesystem;
+use Comex\Util\Process as ProcessUtil;
+use Comex\Util\Process;
+use Comex\Util\ProcessBatch;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -71,7 +71,7 @@ class BaseCommand extends Command {
           break;
 
         case 'web-root':
-          $this->addOption('web-root', 'r', InputOption::VALUE_REQUIRED, 'Location of the web root. Ex: /srv/buildkit/build', dirname(dirname(EXTPUB_FILE)) . '/web');
+          $this->addOption('web-root', 'r', InputOption::VALUE_REQUIRED, 'Location of the web root. Ex: /srv/buildkit/build', dirname(dirname(COMEX_FILE)) . '/web');
           break;
 
         case 'web-url':

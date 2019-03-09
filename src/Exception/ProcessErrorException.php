@@ -1,5 +1,5 @@
 <?php
-namespace Extpub\Exception;
+namespace Comex\Exception;
 
 class ProcessErrorException extends \RuntimeException {
   /**

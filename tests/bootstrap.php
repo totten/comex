@@ -1,7 +1,7 @@
 <?php
 
 #### Find primary autoloader
-define('EXTPUB_FILE', dirname(__DIR__) . '/bin/extpub');
+define('COMEX_FILE', dirname(__DIR__) . '/bin/comex');
 $autoloaders = array(
   implode(DIRECTORY_SEPARATOR, array(dirname(__DIR__), 'vendor', 'autoload.php')),
   implode(DIRECTORY_SEPARATOR, array(dirname(dirname(dirname(dirname(__DIR__)))), 'vendor', 'autoload.php')),
@@ -18,4 +18,4 @@ if (!isset($loader)) {
 }
 
 #### Extra - Register classes in "tests" directory
-$loader->addPsr4('Extpub\\', __DIR__ . DIRECTORY_SEPARATOR);
+$loader->addPsr4('Comex\\', __DIR__ . DIRECTORY_SEPARATOR);

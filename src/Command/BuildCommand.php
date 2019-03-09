@@ -1,10 +1,10 @@
 <?php
-namespace Extpub\Command;
+namespace Comex\Command;
 
-use Extpub\Util\Filesystem;
-use Extpub\Util\Naming;
-use Extpub\Util\Process;
-use Extpub\Util\ProcessBatch;
+use Comex\Util\Filesystem;
+use Comex\Util\Naming;
+use Comex\Util\Process;
+use Comex\Util\ProcessBatch;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -62,7 +62,7 @@ class BuildCommand extends BaseCommand {
     ]);
 
     $args = [
-      'EXTPUB' => EXTPUB_FILE,
+      'COMEX' => COMEX_FILE,
       'EXT' => $input->getOption('ext'),
       'GIT_URL' => $input->getOption('git-url'),
       'COMMIT' => $input->getOption('commit'),
@@ -93,7 +93,7 @@ class BuildCommand extends BaseCommand {
       $args['TMP']
     ));
     $batch->add('<info>Update <comment>info.xml</comment> and <comment>composer.json</comment></info>', new \Symfony\Component\Process\Process(
-      Process::interpolate('php @EXTPUB reconcile @SRC_DIR --ver=@VER && git add info.xml composer.json && git commit -m "Auto-update metadata"', $args),
+      Process::interpolate('php @COMEX reconcile @SRC_DIR --ver=@VER && git add info.xml composer.json && git commit -m "Auto-update metadata"', $args),
       $args['SRC_DIR']
     ));
     if (empty($args['SUB_DIR']) || $args['SUB_DIR'] === '.') {

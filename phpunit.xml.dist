@@ -10,7 +10,7 @@
          bootstrap="tests/bootstrap.php"
 >
   <testsuites>
-    <testsuite name="Extpub Test Suite">
+    <testsuite name="Comex Test Suite">
       <directory>./tests/</directory>
     </testsuite>
   </testsuites>

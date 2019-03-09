@@ -1,12 +1,12 @@
 <?php
-namespace Extpub;
+namespace Comex;
 
-use Extpub\Util\Process as ProcessUtil;
-use Extpub\Application;
+use Comex\Util\Process as ProcessUtil;
+use Comex\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 
-class ExtpubTestCase extends \PHPUnit_Framework_TestCase {
+class ComexTestCase extends \PHPUnit_Framework_TestCase {
   /**
    * @var string
    */
@@ -96,7 +96,7 @@ class ExtpubTestCase extends \PHPUnit_Framework_TestCase {
    * @param string $commit
    */
   public function assertIsCommit($commit) {
-    $this->assertTrue(\Extpub\Util\Commit::isValid($commit));
+    $this->assertTrue(\Comex\Util\Commit::isValid($commit));
   }
 
 }

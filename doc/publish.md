@@ -1,4 +1,4 @@
-# *Publishing*: Sharing extensions through extpub
+# *Publishing*: Sharing extensions through comex
 ...Explanation for extension authors...
 
 * General info.xml => composer.json

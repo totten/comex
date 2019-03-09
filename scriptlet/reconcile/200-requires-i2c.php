@@ -1,12 +1,12 @@
 <?php
 use \Symfony\Component\Console\Output\OutputInterface;
-use \Extpub\Util\Naming;
+use \Comex\Util\Naming;
 
 /**
  * Map the "requires" from "info.xml" to "composer.json".
  */
 return function(OutputInterface $output, SimpleXMLElement $infoXml, &$composerJson) {
-  $infoRequires = \Extpub\Util\InfoXml::getRequires($infoXml);
+  $infoRequires = \Comex\Util\InfoXml::getRequires($infoXml);
   foreach ($infoRequires as $extKey => $extVer) {
     $pkg = Naming::xmlKeyToComposerPkg($extKey);
     $tgtVer = empty($extVer) ? '*' : $extVer;

@@ -1,5 +1,5 @@
 <?php
-namespace Extpub\Util;
+namespace Comex\Util;
 
 class Filesystem extends \Symfony\Component\Filesystem\Filesystem {
   /**

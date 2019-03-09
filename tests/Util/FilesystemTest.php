@@ -1,7 +1,7 @@
 <?php
-namespace Extpub\Util;
+namespace Comex\Util;
 
-class FilesystemTest extends \Extpub\ExtpubTestCase {
+class FilesystemTest extends \Comex\ComexTestCase {
   public function dataIsDescendent() {
     return array(
       array('/ex', '/ex', FALSE),

@@ -1,6 +1,6 @@
 <?php
 
-namespace Extpub\Util;
+namespace Comex\Util;
 
 use CiviExtManagerBundle\Event\FindExtensionsEvent;
 use CiviExtManagerBundle\Event\FindGitReposEvent;

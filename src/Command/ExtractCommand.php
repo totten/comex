@@ -1,11 +1,11 @@
 <?php
-namespace Extpub\Command;
+namespace Comex\Command;
 
-use Extpub\Util\ComposerJson;
-use Extpub\Util\Filesystem;
-use Extpub\Util\ScriptletDir;
-use Extpub\Util\Xml;
-use Extpub\Util\Zip;
+use Comex\Util\ComposerJson;
+use Comex\Util\Filesystem;
+use Comex\Util\ScriptletDir;
+use Comex\Util\Xml;
+use Comex\Util\Zip;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
@@ -101,7 +101,7 @@ Note:
 
   protected function filterInfoXml(OutputInterface $output, $content, $context) {
     /** @var \SimpleXMLElement $infoXml */
-    list ($infoXml, $error) = \Extpub\Util\Xml::parse($content);
+    list ($infoXml, $error) = \Comex\Util\Xml::parse($content);
     if ($infoXml === FALSE) {
       throw new \Exception("Failed to parse info XML\n\n$error");
     }

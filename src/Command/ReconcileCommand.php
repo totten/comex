@@ -1,10 +1,10 @@
 <?php
-namespace Extpub\Command;
+namespace Comex\Command;
 
-use Extpub\Util\ComposerJson;
-use Extpub\Util\Filesystem;
-use Extpub\Util\ScriptletDir;
-use Extpub\Util\Xml;
+use Comex\Util\ComposerJson;
+use Comex\Util\Filesystem;
+use Comex\Util\ScriptletDir;
+use Comex\Util\Xml;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -31,7 +31,7 @@ class ReconcileCommand extends BaseCommand {
       ->setDescription('Given an extension, reconcile info.xml and composer.json.')
       ->setHelp('Given an extension, reconcile info.xml and composer.json.
 
-  Example: extpub ext:reconcile /var/www/ext/myextension
+  Example: comex ext:reconcile /var/www/ext/myextension
       ')
       ->addArgument('ext', InputArgument::REQUIRED, 'Full path to the extension source code');
     $this->useOptions(['dry-run', 'ver']);
@@ -51,7 +51,7 @@ class ReconcileCommand extends BaseCommand {
 
     $composerJson = ComposerJson::loadFile($composerJsonFile, []);
     /** @var \SimpleXMLElement $infoXml */
-    list ($infoXml, $error) = \Extpub\Util\Xml::parse(file_get_contents($infoXmlFile));
+    list ($infoXml, $error) = \Comex\Util\Xml::parse(file_get_contents($infoXmlFile));
     if ($infoXml === FALSE) {
       throw new \Exception("Failed to parse info XML\n\n$error");
     }

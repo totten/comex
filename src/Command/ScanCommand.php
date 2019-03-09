@@ -1,9 +1,9 @@
 <?php
-namespace Extpub\Command;
+namespace Comex\Command;
 
-use Extpub\GitRepo;
-use Extpub\Util\Filesystem;
-use Extpub\Util\GitRepoNormalizer;
+use Comex\GitRepo;
+use Comex\Util\Filesystem;
+use Comex\Util\GitRepoNormalizer;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
@@ -33,11 +33,11 @@ class ScanCommand extends BaseCommand {
 
 You may specify the target repos using a JSON feed:
 
-   extpub plan --git-feed=https://civicrm.org/extdir/git-urls.json
+   comex plan --git-feed=https://civicrm.org/extdir/git-urls.json
 
 Or you may specify target repos using file paths:
 
-  extpub plan ~/src/{first,second,third}
+  comex plan ~/src/{first,second,third}
 
 Note: There are security implications to correctly determining the
 extension-key for which repo is allowed to publish extensions.
@@ -73,7 +73,7 @@ without any special authorization.
       $versions = $this->findVersions($repo['git_url']);
       foreach ($versions as $version => $commit) {
         // $id = sha1(implode(';;', [$repo['key'], $repo['git_url'], $commit, $version]));
-        $task = sprintf('extpub build --ext=%s --git-url=%s --commit=%s --ver=%s --web-root=%s',
+        $task = sprintf('comex build --ext=%s --git-url=%s --commit=%s --ver=%s --web-root=%s',
           escapeshellarg($repo['key']),
           escapeshellarg($repo['git_url']),
           escapeshellarg($commit),
@@ -193,7 +193,7 @@ without any special authorization.
       return NULL;
     }
 
-    list ($infoXml, $error) = \Extpub\Util\Xml::parse(file_get_contents($infoXmlFile));
+    list ($infoXml, $error) = \Comex\Util\Xml::parse(file_get_contents($infoXmlFile));
     if ($infoXml === FALSE) {
       throw new \Exception("Failed to parse info XML\n\n$error");
     }

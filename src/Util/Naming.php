@@ -1,21 +1,21 @@
 <?php
-namespace Extpub\Util;
+namespace Comex\Util;
 
 /**
  * Class Naming
- * @package Extpub\Util
+ * @package Comex\Util
  *
  * Helpers for manipulating package/extension names.
  */
 class Naming {
 
-  const VENDOR = 'cxt';
+  const VENDOR = 'comex';
 
   /**
    * @param string $key
    *   Ex: 'org.civicrm.foobar'
    * @return string
-   *   Ex: 'cxt/org.civicrm.foobar'
+   *   Ex: 'comex/org.civicrm.foobar'
    */
   public static function xmlKeyToComposerPkg($key) {
     if (!preg_match('/^[a-z0-9\._\-]+$/', $key)) {
@@ -26,7 +26,7 @@ class Naming {
 
   /**
    * @param string $pkg
-   *   Ex: 'cxt/org.civicrm.foobar'
+   *   Ex: 'comex/org.civicrm.foobar'
    *   Ex: 'symfony/console'
    * @return string|NULL
    *   Ex: 'org.civicrm.foobar'
@@ -60,7 +60,7 @@ class Naming {
 
   /**
    * @param string $pkg
-   *   Ex: 'cxt/org.civicrm.foobar'
+   *   Ex: 'comex/org.civicrm.foobar'
    * @return bool
    */
   public static function isExtPkg($pkg) {

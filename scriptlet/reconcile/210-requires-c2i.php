@@ -1,6 +1,6 @@
 <?php
 use \Symfony\Component\Console\Output\OutputInterface;
-use \Extpub\Util\Naming;
+use \Comex\Util\Naming;
 
 /**
  * Map the "requires" from composer.json to info.xml
@@ -10,7 +10,7 @@ return function(OutputInterface $output, SimpleXMLElement $infoXml, &$composerJs
     return;
   }
 
-  $infoRequires = \Extpub\Util\InfoXml::getRequires($infoXml);
+  $infoRequires = \Comex\Util\InfoXml::getRequires($infoXml);
 
   foreach ($composerJson['require'] as $pkg => $ver) {
     if (!Naming::isExtPkg($pkg)) {
@@ -24,5 +24,5 @@ return function(OutputInterface $output, SimpleXMLElement $infoXml, &$composerJs
     }
   }
 
-  \Extpub\Util\InfoXml::setRequires($infoXml, $infoRequires);
+  \Comex\Util\InfoXml::setRequires($infoXml, $infoRequires);
 };

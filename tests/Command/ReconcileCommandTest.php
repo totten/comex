@@ -1,10 +1,10 @@
 <?php
-namespace Extpub\Command;
+namespace Comex\Command;
 
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 
-class ReconcileCommandTest extends \Extpub\ExtpubTestCase {
+class ReconcileCommandTest extends \Comex\ComexTestCase {
 
   public function setup() {
     parent::setup();

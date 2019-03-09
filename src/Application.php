@@ -1,5 +1,5 @@
 <?php
-namespace Extpub;
+namespace Comex;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,10 +14,10 @@ class Application extends \Symfony\Component\Console\Application {
    */
   public static function main($binDir) {
     if (self::isPhar() && !self::isInternalHost()) {
-      fwrite(STDERR, "extpub.phar is intended for use on internal civicrm.org infra\n");
+      fwrite(STDERR, "comex.phar is intended for use on internal civicrm.org infra\n");
       exit(1);
     }
-    $application = new Application('extpub', '@package_version@');
+    $application = new Application('comex', '@package_version@');
     $application->run();
   }
 
@@ -34,11 +34,11 @@ class Application extends \Symfony\Component\Console\Application {
    */
   public function createCommands() {
     $commands = array();
-    $commands[] = new \Extpub\Command\ScanCommand();
-    $commands[] = new \Extpub\Command\BuildCommand();
-    $commands[] = new \Extpub\Command\ReconcileCommand();
-    $commands[] = new \Extpub\Command\ExtractCommand();
-    $commands[] = new \Extpub\Command\CompileCommand();
+    $commands[] = new \Comex\Command\ScanCommand();
+    $commands[] = new \Comex\Command\BuildCommand();
+    $commands[] = new \Comex\Command\ReconcileCommand();
+    $commands[] = new \Comex\Command\ExtractCommand();
+    $commands[] = new \Comex\Command\CompileCommand();
     return $commands;
   }
 
