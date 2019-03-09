@@ -41,10 +41,27 @@ class ComposerJson {
       return strcmp(self::fieldWeight($a), self::fieldWeight($b));
     });
 
-    if (isset($composerJson['require'])) {
-      ksort($composerJson['require']);
+    foreach (self::getPackageListFields() as $elem) {
+      if (isset($composerJson[$elem])) {
+        ksort($composerJson[$elem]);
+      }
     }
-    return json_encode($composerJson, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES) . "\n";
+
+    return json_encode($composerJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n";
+  }
+
+  /**
+   * @return array
+   */
+  public static function getPackageListFields() {
+    return [
+      'require',
+      'require-dev',
+      'provide',
+      'replace',
+      'suggest',
+      'conflict'
+    ];
   }
 
 }
