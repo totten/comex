@@ -44,6 +44,21 @@ class Naming {
   }
 
   /**
+   * @param string $key
+   *   Ex: org.civicrm.foobar
+   * @return string
+   *   Ex: foobar
+   *   Note: This is *NOT* the same as the short-name, so don't use it in ways
+   *   that needs to be matched-up. Rather, if you're using some other key
+   *   that provides uniqueness, then this can be mixed-in to make it a
+   *   bit more legible.
+   */
+  public static function xmlKeyToHeuristicShortName($key) {
+    $parts = explode('.', $key);
+    return array_pop($parts);
+  }
+
+  /**
    * @param string $pkg
    *   Ex: 'cxt/org.civicrm.foobar'
    * @return bool

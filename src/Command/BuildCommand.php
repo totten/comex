@@ -51,11 +51,10 @@ class BuildCommand extends BaseCommand {
     }
 
     $id = implode('-', [
-      preg_replace('/\.git$/', '', basename($input->getOption('git-url'))),
+      Naming::xmlKeyToHeuristicShortName($input->getOption('ext')),
       $input->getOption('ver'),
       sha1(implode(';;', [
         $input->getOption('ext'),
-        $input->getOption('git-url'),
         $input->getOption('commit'),
         $input->getOption('ver'),
         $input->getOption('sub-dir')
