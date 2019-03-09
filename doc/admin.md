@@ -1,12 +1,14 @@
 # *Administration*: Managing the comex system
 
-This provides a system which:
+`comex` runs in a few distinct phases:
 
-* Scans `git` repositories for tagged releases of CiviCRM extensions
-* Reconciles general metadata in `info.xml` and `composer.json` (e.g. generating a `composer.json` based on `info.xml`).
-* Adds release metadata in `info.xml` and `composer.json`
-* Prepares archives for these releases
-* Advertises a composer-compatible feed (`composer config repositories.comex composer http://comex.bknix:8001`)
+* `comex scan`: Given a list of `git` repositories, figure a full list of extensions/versions which should be built
+* `comex build`: Given a specific extension/version (with `git` repository and commit), prepare a `*.zip` release.
+    * `comex reconcile`: As part of the `comex build` process, analyze the `info.xml` and `composer.json` files.
+      Combine key information (such as the list of dependencies) to provide consistent information in both formats.
+* `comex extract`: Given a series of `*.zip` releases, extract metadata. Augment it with extra publication details
+  (e.g. download URLs and checksums).
+* `comex compile`: Given a full set of metadata, combine it all into one feed.
 
 ## How to simulate the whole workflow locally (without any special access)
 
@@ -28,6 +30,15 @@ This provides a system which:
 
 ## (Real run) Reconcile the info.xml and composer.json in a local copy of the api4 extension
 ./bin/comex reconcile -v ~/bknix/build/dmaster/sites/all/modules/civicrm/ext/api4
+
+## Extract and augment metadata for `*.zip` files. (Lazy mode)
+./bin/comex extract --web-url http://localhost
+
+## Extract and augment metadata for `*.zip` files. (Force mode)
+./bin/comex extract --web-url http://localhost -f
+
+## Compile all the metadata into one feed.
+./bin/comex compile
 ```
 
 ## Reference: Git Feed Format
