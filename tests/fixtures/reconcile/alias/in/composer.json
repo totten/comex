@@ -1,0 +1,7 @@
+{
+    "name": "canonical/name",
+    "require": {
+        "comex/org.civicrm.api4": "~4.3",
+        "intervention/image": "^2.4"
+    }
+}
