@@ -71,7 +71,7 @@ class BaseCommand extends Command {
           break;
 
         case 'web-root':
-          $this->addOption('web-root', 'r', InputOption::VALUE_REQUIRED, 'Location of the web root. Ex: /srv/buildkit/build', dirname(dirname(COMEX_FILE)) . '/web');
+          $this->addOption('web-root', NULL, InputOption::VALUE_REQUIRED, 'Location of the web root. Ex: /srv/buildkit/build', dirname(dirname(COMEX_FILE)) . '/web');
           break;
 
         case 'web-url':
@@ -162,6 +162,42 @@ class BaseCommand extends Command {
         throw new \Exception("Missing required parameter: --$option");
       }
     }
+  }
+
+
+  /**
+   * Parse an option's data. This is for options where the default behavior
+   * (of total omission) differs from the activated behavior
+   * (of an active but unspecified option).
+   *
+   * Example, suppose we want these interpretations:
+   *   cv en         ==> Means "--refresh=auto"; see $omittedDefault
+   *   cv en -r      ==> Means "--refresh=yes"; see $activeDefault
+   *   cv en -r=yes  ==> Means "--refresh=yes"
+   *   cv en -r=no   ==> Means "--refresh=no"
+   *
+   * @param \Symfony\Component\Console\Input\InputInterface $input
+   * @param array $rawNames
+   *   Ex: array('-r', '--refresh').
+   * @param string $omittedDefault
+   *   Value to use if option is completely omitted.
+   * @param string $activeDefault
+   *   Value to use if option is activated without data.
+   * @return string
+   */
+  public function parseOptionalOption(InputInterface $input, $rawNames, $omittedDefault, $activeDefault) {
+    $value = NULL;
+    foreach ($rawNames as $rawName) {
+      if ($input->hasParameterOption($rawName)) {
+        if (NULL === $input->getParameterOption($rawName)) {
+          return $activeDefault;
+        }
+        else {
+          return $input->getParameterOption($rawName);
+        }
+      }
+    }
+    return $omittedDefault;
   }
 
 }
