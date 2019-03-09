@@ -1,13 +1,8 @@
 <?php
 namespace Comex\Command;
 
-use Comex\Application;
 use Symfony\Component\Console\Command\Command;
 use Comex\GitRepo;
-use Comex\Util\ArrayUtil;
-use Comex\Util\Filesystem;
-use Comex\Util\Process as ProcessUtil;
-use Comex\Util\Process;
 use Comex\Util\ProcessBatch;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
