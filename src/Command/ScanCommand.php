@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 
-class PlanCommand extends BaseCommand {
+class ScanCommand extends BaseCommand {
 
   /**
    * @var Filesystem
@@ -27,7 +27,7 @@ class PlanCommand extends BaseCommand {
     $this
       ->useOptions(['git-feed', 'limit', 'web-root'])
       ->useArguments(['git-repos'])
-      ->setName('plan')
+      ->setName('scan')
       ->setDescription('Scan a list of repos and plan the build-steps')
       ->setHelp('Scan a list of repos and plan the build-steps
 
