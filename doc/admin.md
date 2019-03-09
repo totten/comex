@@ -17,30 +17,33 @@
 ./bin/comex scan -v --git-feed https://civicrm.org/extdir/git-urls.json --limit 2
 
 ## Scan a couple of local git repos. Plan how to build them.
-./bin/comex scan -v ~/bknix/build/dmaster/sites/all/modules/civicrm/ext/{api4,flexmailer,mosaico}
+./bin/comex scan -v ~/src/{api4,flexmailer,mosaico}
 
 ## As above, but actually execute the commands (4 parallel threads)
-./bin/comex scan ~/bknix/build/dmaster/sites/all/modules/civicrm/ext/{api4,flexmailer,mosaico} -px | xargs -L1 -P4 ./bin/comex
+./bin/comex scan ~/src/{api4,flexmailer,mosaico} -px \
+  | xargs -L1 -P4 ./bin/comex
 ```
 
-## Examples: `build
+## Examples: `build`
 
 ```
 ## (Dry run) Build the extension 'org.civicrm.api4' at version 4.1.0.
-./bin/comex build -v --ext='org.civicrm.api4' --git-url='https://github.com/civicrm/org.civicrm.api4'  --commit='d5a853a6f4d1cad11e8655755b329f15eb3fc27b' --ver='4.1.0' -f -N
+./bin/comex build -v --ext='org.civicrm.api4' --git-url='https://github.com/civicrm/org.civicrm.api4' \
+  --commit='d5a853a6f4d1cad11e8655755b329f15eb3fc27b' --ver='4.1.0' -f -N
 
 ## (Real run) Build the extension 'org.civicrm.api4' at version 4.1.0. Overwrite any existing zip files.
-./bin/comex build -v --ext='org.civicrm.api4' --git-url='https://github.com/civicrm/org.civicrm.api4'  --commit='d5a853a6f4d1cad11e8655755b329f15eb3fc27b' --ver='4.1.0' -f
+./bin/comex build -v --ext='org.civicrm.api4' --git-url='https://github.com/civicrm/org.civicrm.api4' \
+  --commit='d5a853a6f4d1cad11e8655755b329f15eb3fc27b' --ver='4.1.0' -f
 ```
 
 ## Examples: `reconcile`
 
 ```
 ## (Dry run) Reconcile the info.xml and composer.json in a local copy of the api4 extension
-./bin/comex reconcile -v ~/bknix/build/dmaster/sites/all/modules/civicrm/ext/api4 -N
+./bin/comex reconcile -v ~/src/api4 -N
 
 ## (Real run) Reconcile the info.xml and composer.json in a local copy of the api4 extension
-./bin/comex reconcile -v ~/bknix/build/dmaster/sites/all/modules/civicrm/ext/api4
+./bin/comex reconcile -v ~/src/api4
 ```
 
 ## Examples: `extract`
@@ -53,7 +56,7 @@
 ./bin/comex extract --web-url http://localhost -f
 ```
 
-# Examples: `compile`
+## Examples: `compile`
 
 ```
 ## Compile all the metadata into one feed.
