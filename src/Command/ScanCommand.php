@@ -3,6 +3,7 @@ namespace Comex\Command;
 
 use Comex\Util\Filesystem;
 use Comex\Util\GitRepoNormalizer;
+use Comex\Util\Process;
 use Comex\Util\Regex;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -79,20 +80,20 @@ without any special authorization.
       $versions = $this->findVersions($repo['git_url']);
       foreach ($versions as $version => $commit) {
         $taskId = sha1(implode(';;', [$repo['key'], $commit, $version, empty($repo['path']) ? '' : $repo['path']]));
-        $task = sprintf('comex build --ext=%s --git-url=%s --commit=%s --ver=%s --web-root=%s',
-          escapeshellarg($repo['key']),
-          escapeshellarg($repo['git_url']),
-          escapeshellarg($commit),
-          escapeshellarg($version),
-          escapeshellarg($input->getOption('web-root'))
-        );
-        if (!empty($repo['path'])) {
-          $task .= sprintf(' --sub-dir=%s', escapeshellarg($repo['path']));
-        }
+        $cmd = 'comex build --ext=@EXT --git-url=@GIT_URL --commit=@COMMIT --ver=@VERSION --web-root=@WEB_ROOT'
+          . (empty($repo['path']) ? '' : ' --sub-dir=@SUBDIR');
+        $args = [
+          'EXT' => $repo['key'],
+          'GIT_URL' => $repo['git_url'],
+          'COMMIT' => $commit,
+          'VERSION' => $version,
+          'WEB_ROOT' => $input->getOption('web-root'),
+          'SUB_DIR' => $repo['path'],
+        ];
         $tasks[$taskId] = [
           'taskId' => $taskId,
           'title' => sprintf('Build %s v%s', $repo['key'], $version),
-          'cmd' => $task,
+          'cmd' => Process::interpolate($cmd, $args),
         ];
       }
     }
