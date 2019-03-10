@@ -78,7 +78,7 @@ without any special authorization.
       }
       $versions = $this->findVersions($repo['git_url']);
       foreach ($versions as $version => $commit) {
-        // $id = sha1(implode(';;', [$repo['key'], $repo['git_url'], $commit, $version]));
+        $taskId = sha1(implode(';;', [$repo['key'], $commit, $version, empty($repo['path']) ? '' : $repo['path']]));
         $task = sprintf('comex build --ext=%s --git-url=%s --commit=%s --ver=%s --web-root=%s',
           escapeshellarg($repo['key']),
           escapeshellarg($repo['git_url']),
@@ -89,7 +89,8 @@ without any special authorization.
         if (!empty($repo['path'])) {
           $task .= sprintf(' --sub-dir=%s', escapeshellarg($repo['path']));
         }
-        $tasks[] = [
+        $tasks[$taskId] = [
+          'taskId' => $taskId,
           'title' => sprintf('Build %s v%s', $repo['key'], $version),
           'cmd' => $task,
         ];
@@ -111,7 +112,7 @@ without any special authorization.
 
       case 'j':
       case 'json':
-        $output->writeln(json_encode($tasks, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES), OutputInterface::OUTPUT_RAW);
+        $output->writeln(json_encode(array_values($tasks), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES), OutputInterface::OUTPUT_RAW);
         break;
 
       case 'x':
@@ -215,13 +216,14 @@ without any special authorization.
     $rawTags = `git ls-remote $escapeUrl 'refs/tags/*'`;
 
     $lines = explode("\n", $rawTags);
-    $tags = [];
+    $versions = [];
     foreach ($lines as $line) {
       if (preg_match(';^([0-9a-f]+)\s+refs/tags/v?(\d[\w\.\-]+)$;', $line, $m)) {
-        $tags[$m[2]] = $m[1];
+        $versions[$m[2]] = $m[1];
       }
     }
-    return $tags;
+    ksort($versions);
+    return $versions;
   }
 
   /**
