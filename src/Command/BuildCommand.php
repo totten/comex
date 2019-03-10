@@ -1,6 +1,7 @@
 <?php
 namespace Comex\Command;
 
+use Comex\Exception\ProcessErrorException;
 use Comex\Util\Filesystem;
 use Comex\Util\Naming;
 use Comex\Util\Process;
@@ -71,7 +72,8 @@ class BuildCommand extends BaseCommand {
       'ID' => $id,
       'TMP' => sys_get_temp_dir() . DIRECTORY_SEPARATOR . $id . '-' . rand(0, 100000),
       'WEB_ROOT' => $input->getOption('web-root'),
-      'ZIP' => $input->getOption('web-root') . "dist/" . $input->getOption('ext') . '/' . "$id.zip"
+      'ZIP' => $input->getOption('web-root') . "dist/" . $input->getOption('ext') . '/' . "$id.zip",
+      'ERR_FILE' => $input->getOption('web-root') . "dist/" . $input->getOption('ext') . '/' . "$id.err.json",
     ];
     $args['ZIP_DIR'] = dirname($args['ZIP']);
     $args['SRC_DIR'] = $args['TMP'];
@@ -79,9 +81,11 @@ class BuildCommand extends BaseCommand {
       $args['SRC_DIR'] .= DIRECTORY_SEPARATOR . $args['SUB_DIR'];
     }
 
-    if (file_exists($args['ZIP']) && !$input->getOption('force')) {
-      $output->writeln("<info>Skip: File <comment>" . basename($args['ZIP']) . "</comment> already exists. Use --force to override.</info>");
-      return 0;
+    foreach (['ZIP', 'ERR_FILE'] as $flagFile) {
+      if (file_exists($args[$flagFile]) && !$input->getOption('force')) {
+        $output->writeln("<info>Skip: File <comment>" . basename($args[$flagFile]) . "</comment> already exists. Use --force to override.</info>");
+        return 0;
+      }
     }
 
     $batch = new ProcessBatch();
@@ -112,7 +116,19 @@ class BuildCommand extends BaseCommand {
     $batch->add('<info>Remove temp dir</info>', new \Symfony\Component\Process\Process(
       Process::interpolate('rm -rf @TMP', $args)
     ));
-    $this->runBatch($input, $output, $batch);
+
+    try {
+      $this->runBatch($input, $output, $batch);
+    }
+    catch (ProcessErrorException $e) {
+      file_put_contents($args['ERR_FILE'],
+        json_encode([
+          'message' => $e->getMessage(),
+          'trace' => $e->getTraceAsString(),
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+      );
+      throw $e;
+    }
   }
 
   protected function isValidVersion($ver) {
