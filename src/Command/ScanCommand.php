@@ -3,6 +3,7 @@ namespace Comex\Command;
 
 use Comex\Util\Filesystem;
 use Comex\Util\GitRepoNormalizer;
+use Comex\Util\Regex;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -129,31 +130,39 @@ without any special authorization.
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    $json = curl_exec($ch);
+    $unparsed = curl_exec($ch);
     curl_close($ch);
-    return json_decode($json, 1);
+    $parsed = json_decode($unparsed, 1);
+    if ($parsed === NULL) {
+      throw new \Exception("Invalid JSON feed: $url");
+    }
+    return $parsed;
   }
 
   /**
    * @param \Symfony\Component\Console\Output\OutputInterface $output
    * @param string $feedUrl
    * @param string $readyStatus
+   * @param array $schemes
+   *   List of supported URL schemes.
    * @return array
    *   Array (string $gitUrl).
    */
-  public function getFilteredFeed(OutputInterface $output, $feedUrl, $readyStatus) {
+  public function getFilteredFeed(OutputInterface $output, $feedUrl, $readyStatus, $schemes) {
+    $urlRegex = ';^' . Regex::quotedOr($schemes, ';') . '://;';
+
     $repos = [];
     foreach ($this->getFeed($feedUrl) as $repo) {
       $repo['git_url'] = GitRepoNormalizer::normalize($repo['git_url']);
       $repo['path'] = isset($repo['path']) ? $repo['path'] : '';
 
-      if (!preg_match(';^https?://;', $repo['git_url'])) {
+      if (!preg_match($urlRegex, $repo['git_url'])) {
         $this->getErrorOutput($output)
-          ->writeln("<info>Skipped malformed URL <comment>{$repo['git_url']}</comment></info>", OutputInterface::VERBOSITY_VERBOSE);
+          ->writeln("<info>Skipped <comment>{$repo['git_url']}</comment>: Disabled or unsupported scheme</info>", OutputInterface::VERBOSITY_VERBOSE);
       }
       elseif ($repo['ready'] !== $readyStatus) {
         $this->getErrorOutput($output)
-          ->writeln("<info>Skipped <comment>{$repo['git_url']}</comment></info>", OutputInterface::VERBOSITY_VERBOSE);
+          ->writeln("<info>Skipped <comment>{$repo['git_url']}</comment>: Incorrect status</info>", OutputInterface::VERBOSITY_VERBOSE);
       }
       else {
         $repos[] = $repo;
@@ -246,7 +255,10 @@ without any special authorization.
   protected function pickRepos(InputInterface $input, OutputInterface $output) {
     $repos = [];
     if ($feedUrl = $input->getOption('git-feed')) {
-      $repos = array_merge($repos, $this->getFilteredFeed($output, $feedUrl, 'ready'));
+      $schemes = preg_match(';^file://;', $feedUrl)
+        ? ['https', 'http', 'git', 'file']
+        : ['https', 'http', 'git'];
+      $repos = array_merge($repos, $this->getFilteredFeed($output, $feedUrl, 'ready', $schemes));
     }
     if ($repoDirs = $input->getArgument('git-repos')) {
       $repos = array_merge($repos, $this->getRepos($output, $repoDirs));
