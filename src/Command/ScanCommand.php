@@ -276,15 +276,4 @@ without any special authorization.
     return $repos;
   }
 
-  /**
-   * @param \Symfony\Component\Console\Output\OutputInterface $output
-   * @return \Symfony\Component\Console\Output\OutputInterface
-   */
-  protected function getErrorOutput(OutputInterface $output) {
-    return is_callable([
-      $output,
-      'getErrorOutput'
-    ]) ? $output->getErrorOutput() : $output;
-  }
-
 }

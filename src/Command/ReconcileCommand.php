@@ -33,17 +33,17 @@ class ReconcileCommand extends BaseCommand {
 
   Example: comex reconcile /var/www/ext/myextension
       ')
-      ->addArgument('ext', InputArgument::REQUIRED, 'Full path to the extension source code');
-    $this->useOptions(['dry-run', 'ver']);
+      ->addArgument('ext-repo', InputArgument::REQUIRED, 'Full path to the extension source code');
+    $this->useOptions(['dry-run', 'ver', 'assert-key']);
   }
 
   protected function execute(InputInterface $input, OutputInterface $output) {
-    $ext = rtrim($input->getArgument('ext'), DIRECTORY_SEPARATOR);
+    $ext = rtrim($input->getArgument('ext-repo'), DIRECTORY_SEPARATOR);
     if (!is_dir($ext)) {
-      throw new \Exception("Directory not found: " . $input->getArgument('ext'));
+      throw new \Exception("Directory not found: " . $input->getArgument('ext-repo'));
     }
     if (!file_exists($ext . '/info.xml')) {
-      throw new \Exception("info.xml not found: " . $input->getArgument('ext'));
+      throw new \Exception("info.xml not found: " . $input->getArgument('ext-repo'));
     }
 
     $composerJsonFile = $ext . '/composer.json';
@@ -54,6 +54,11 @@ class ReconcileCommand extends BaseCommand {
     list ($infoXml, $error) = \Comex\Util\Xml::parse(file_get_contents($infoXmlFile));
     if ($infoXml === FALSE) {
       throw new \Exception("Failed to parse info XML\n\n$error");
+    }
+
+    $key = $infoXml['key'];
+    if ($input->getOption('assert-key') && $input->getOption('assert-key') !== $key) {
+      throw new \Exception("Mismatched key: expect=" . $input->getOption('assert-key') . ' actual=' . $key);
     }
 
     if ($input->getOption('ver')) {

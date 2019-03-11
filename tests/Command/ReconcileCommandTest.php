@@ -24,19 +24,30 @@ class ReconcileCommandTest extends \Comex\ComexTestCase {
    * @dataProvider getExamples
    */
   public function testExample($baseDir) {
-    $expectComposerJson = file_get_contents("$baseDir/out/composer.json");
-    $expectInfoXml = file_get_contents("$baseDir/out/info.xml");
-    $extraArgs = file_exists("$baseDir/in/reconcile-args.json")
-      ? json_decode(file_get_contents("$baseDir/in/reconcile-args.json"), 1)
-      : [];
+    $expectComposerJson = $this->getFile("$baseDir/out/composer.json");
+    $expectInfoXml = $this->getFile("$baseDir/out/info.xml");
+    $expectError = $this->getFile("$baseDir/out/error.json");
+    $extraArgs = ($f = $this->getFile("$baseDir/in/reconcile-args.json")) ? json_decode($f, 1) : [];
 
-    $commandTester = $this->createCommandTester(array(
-      'command' => 'reconcile',
-      '--dry-run' => TRUE,
-      'ext' => "$baseDir/in",
-    ) + $extraArgs, ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
+    try {
+      $commandTester = $this->createCommandTester(array(
+          'command' => 'reconcile',
+          '--dry-run' => TRUE,
+          'ext-repo' => "$baseDir/in",
+        ) + $extraArgs, ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
+    }
+    catch (\Exception $e) {
+      if ($expectError !== NULL) {
+        $expect = json_decode($expectError, 1);
+        $this->assertRegexp($expect['outputPattern'], $e->getMessage());
+        return;
+      }
+      else {
+        throw $e;
+      }
+    }
+
     $allOutput = $commandTester->getDisplay(FALSE);
-
     if (preg_match(';Write composer.json. \(Dry Run\)(.*)Write info.xml. \(Dry Run\)(.*);s', $allOutput, $m)) {
       $actualComposerJson = $m[1];
       $actualInfoXml = $m[2];
@@ -46,6 +57,10 @@ class ReconcileCommandTest extends \Comex\ComexTestCase {
     else {
       $this->fail('Failed to parse output:' . $allOutput);
     }
+  }
+
+  protected function getFile($file) {
+    return file_exists($file) ? file_get_contents($file) : NULL;
   }
 
 }

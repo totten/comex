@@ -21,6 +21,10 @@ class BaseCommand extends Command {
     foreach ($names as $name) {
       switch ($name) {
 
+        case 'assert-key':
+          $this->addOption('assert-key', NULL, InputOption::VALUE_REQUIRED, 'Assert that the extension has the given key');
+          break;
+
         case 'download-url':
           $this->addOption('download-url', NULL, InputOption::VALUE_REQUIRED, 'Intended public URL');
           break;
@@ -106,6 +110,17 @@ class BaseCommand extends Command {
     if ($this->getDefinition()->hasOption('web-url')) {
       $this->normalizeBaseUrlOption($input, 'web-url');
     }
+  }
+
+  /**
+   * @param \Symfony\Component\Console\Output\OutputInterface $output
+   * @return \Symfony\Component\Console\Output\OutputInterface
+   */
+  protected function getErrorOutput(OutputInterface $output) {
+    return is_callable([
+      $output,
+      'getErrorOutput'
+    ]) ? $output->getErrorOutput() : $output;
   }
 
   /**

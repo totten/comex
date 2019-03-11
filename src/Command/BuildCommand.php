@@ -97,7 +97,7 @@ class BuildCommand extends BaseCommand {
       $args['TMP']
     ));
     $batch->add('<info>Update <comment>info.xml</comment> and <comment>composer.json</comment></info>', new \Symfony\Component\Process\Process(
-      Process::interpolate('php @COMEX reconcile @SRC_DIR --ver=@VER && git add info.xml composer.json && git commit -m "Auto-update metadata"', $args),
+      Process::interpolate('php @COMEX reconcile @SRC_DIR --assert-key=@EXT --ver=@VER && git add info.xml composer.json && git commit -m "Auto-update metadata"', $args),
       $args['SRC_DIR']
     ));
     if (empty($args['SUB_DIR']) || $args['SUB_DIR'] === '.') {
@@ -121,6 +121,7 @@ class BuildCommand extends BaseCommand {
       $this->runBatch($input, $output, $batch);
     }
     catch (ProcessErrorException $e) {
+      $this->getErrorOutput($output)->writeln("<error>Build failed. Error recorded in {$args['ERR_FILE']}</error>");
       file_put_contents($args['ERR_FILE'],
         json_encode([
           'message' => $e->getMessage(),
