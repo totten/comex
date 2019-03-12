@@ -7,7 +7,7 @@
 * Create your extension
 * If your extension has dependencies on other extensions, list the extensions in one or both of these media:
     * `composer.json`: `"require": {"cxt/org.other.extension": "~2.5}`
-    * `info.xml`: `<requires><ext ver="~2.5">org.other.extension</ext></requires>`
+    * `info.xml`: `<requires><ext version="~2.5">org.other.extension</ext></requires>`
 * Publish it to a public, standalone repo on Github or lab.civicrm.org
 * Register the extension on `civicrm.org`. Specify the "Git URL".
 * Whenever you do a release, a make a tag.
