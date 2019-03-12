@@ -14,7 +14,6 @@
     <url desc="Support">https://example.org/support</url>
     <url desc="Licensing">http://www.gnu.org/licenses/agpl-3.0.html</url>
   </urls>
-  <releaseDate>2017-12-07</releaseDate>
   <version>2.0-beta4</version>
   <develStage>beta</develStage>
   <compatibility>
@@ -24,6 +23,7 @@
   <civix>
     <namespace>CRM/Foobar</namespace>
   </civix>
+  <releaseDate>2019-01-02</releaseDate>
   <requires>
     <ext version="~4.3">org.civicrm.api4</ext>
   </requires>
