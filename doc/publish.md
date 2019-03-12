@@ -29,7 +29,7 @@ There are two formats in which you can describe a package (`info.xml` and `compo
 Suppose your extension is a thin, plain-old extension -- it has no external dependencies, or it only depends on other extensions. Most extensions published in the directory are like this.
 
 Suggestions:
-* Use `info.xml` as the canonical metadata. 
+* Use `info.xml` as the canonical metadata. If you need versioned-dependencies, use the notation `<requires><ext version="~2.5">org.example.foobar</ext></requires>`
 * Omit `composer.json` completely. (The file will be auto-generated based on `info.xml`.)
 
 ## Use-Case: Specifying a composer-ified extension
