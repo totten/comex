@@ -219,13 +219,7 @@ without any special authorization.
     if (!file_exists($infoXmlFile)) {
       return NULL;
     }
-
-    list ($infoXml, $error) = \Comex\Util\Xml::parse(file_get_contents($infoXmlFile));
-    if ($infoXml === FALSE) {
-      throw new \Exception("Failed to parse info XML\n\n$error");
-    }
-
-    return (string) $infoXml->attributes()->key;
+    return (string) \Comex\Util\Xml::parseFile($infoXmlFile)['key'];
   }
 
   /**

@@ -4,6 +4,37 @@ namespace Comex\Util;
 class Xml {
 
   /**
+   * @param string $file
+   *   File path.
+   * @return \SimpleXMLElement
+   * @throws \Exception
+   *   An exception if the file is missing or malformed.
+   */
+  public static function parseFile($file) {
+    if (!file_exists($file)) {
+      throw new \Exception("File not found: $file");
+    }
+    return self::parse(file_get_contents($file));
+  }
+
+  /**
+   * Read a well-formed XML file
+   *
+   * @param string $content
+   *   Raw XML content
+   * @return \SimpleXMLElement
+   * @throws \Exception
+   *   An exception if the file is malformed.
+   */
+  public static function parse($content) {
+    list ($xml, $error) = static::parseSafely($content);
+    if ($xml === FALSE) {
+      throw new \Exception("Failed to parse info XML\n\n$error");
+    }
+    return $xml;
+  }
+
+  /**
    * Read a well-formed XML file
    *
    * @param $string
@@ -11,7 +42,7 @@ class Xml {
    * @return array
    *   (0 => SimpleXMLElement|FALSE, 1 => errorMessage|FALSE)
    */
-  public static function parse($string) {
+  public static function parseSafely($string) {
     $xml = FALSE; // SimpleXMLElement
     $error = FALSE; // string
 

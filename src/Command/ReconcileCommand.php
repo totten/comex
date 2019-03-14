@@ -51,10 +51,7 @@ class ReconcileCommand extends BaseCommand {
 
     $composerJson = ComposerJson::loadFile($composerJsonFile, []);
     /** @var \SimpleXMLElement $infoXml */
-    list ($infoXml, $error) = \Comex\Util\Xml::parse(file_get_contents($infoXmlFile));
-    if ($infoXml === FALSE) {
-      throw new \Exception("Failed to parse info XML\n\n$error");
-    }
+    $infoXml = \Comex\Util\Xml::parseFile($infoXmlFile);
 
     $key = $infoXml['key'];
     if ($input->getOption('assert-key') && $input->getOption('assert-key') !== $key) {

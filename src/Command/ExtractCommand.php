@@ -101,11 +101,7 @@ Note:
 
   protected function filterInfoXml(OutputInterface $output, $content, $context) {
     /** @var \SimpleXMLElement $infoXml */
-    list ($infoXml, $error) = \Comex\Util\Xml::parse($content);
-    if ($infoXml === FALSE) {
-      throw new \Exception("Failed to parse info XML\n\n$error");
-    }
-
+    $infoXml = \Comex\Util\Xml::parse($content);
     ScriptletDir::create('extract-info')->run([$output, $infoXml, $context]);
     return Xml::prettyPrint($infoXml);
   }
