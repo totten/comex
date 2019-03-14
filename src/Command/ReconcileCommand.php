@@ -53,7 +53,7 @@ class ReconcileCommand extends BaseCommand {
     /** @var \SimpleXMLElement $infoXml */
     $infoXml = \Comex\Util\Xml::parseFile($infoXmlFile);
 
-    $key = $infoXml['key'];
+    $key = (string) $infoXml['key'];
     if ($input->getOption('assert-key') && $input->getOption('assert-key') !== $key) {
       throw new \Exception("Mismatched key: expect=" . $input->getOption('assert-key') . ' actual=' . $key);
     }
