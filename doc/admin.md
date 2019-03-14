@@ -4,6 +4,7 @@
 
 * `comex scan`: Given a list of `git` repositories, figure a full list of extensions/versions which should be built
 * `comex build`: Given a specific extension/version (with `git` repository and commit), prepare a `*.zip` release.
+  (By default, this is lazy and quits quickly if the `*.zip` is already built.)
     * `comex reconcile`: As part of the `comex build` process, analyze the `info.xml` and `composer.json` files.
       Combine key information (such as the list of dependencies) to provide consistent information in both formats.
 * `comex extract`: Given a series of `*.zip` releases, extract metadata. Augment it with extra publication details
