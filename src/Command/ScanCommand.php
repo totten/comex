@@ -99,35 +99,16 @@ without any special authorization.
     }
 
     $print = $this->parseOptionalOption($input, ['--print', '-p'], 'bash', 'bash');
-    switch ($print) {
-      case '';
-      case NULL:
-        break;
-
-      case 'b':
-      case 'bash':
-        foreach ($tasks as $task) {
-          $output->writeln($task['cmd'], OutputInterface::OUTPUT_RAW);
-        }
-        break;
-
-      case 'j':
-      case 'json':
-        $output->writeln(json_encode(array_values($tasks), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES), OutputInterface::OUTPUT_RAW);
-        break;
-
-      case 'x':
-      case 'xargs':
-        foreach ($tasks as $task) {
-          echo preg_replace('/^comex /', '', $task['cmd']) . "\n";
-        }
-        break;
-
-      default:
-        throw new \Exception("Unrecognized print format");
-    }
+    $this->sendTasks($output, $print, $tasks);
   }
 
+  /**
+   * @param string $url
+   *   URL of the JSON feed.
+   * @return array
+   *   Parsed content of the JSON feed.
+   * @throws \Exception
+   */
   public function getFeed($url) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -228,7 +209,7 @@ without any special authorization.
   }
 
   /**
-   * Given a git repo, determine its primary extension-key.
+   * Given an info.xml, determine its primary extension-key.
    *
    * @param string $infoXmlFile
    * @return string|NULL
@@ -274,6 +255,42 @@ without any special authorization.
       return $repos;
     }
     return $repos;
+  }
+
+  /**
+   * @param \Symfony\Component\Console\Output\OutputInterface $output
+   * @param string $format
+   * @param array $tasks
+   * @throws \Exception
+   */
+  protected function sendTasks(OutputInterface $output, $format, $tasks) {
+    switch ($format) {
+      case '';
+      case NULL:
+        break;
+
+      case 'b':
+      case 'bash':
+        foreach ($tasks as $task) {
+          $output->writeln($task['cmd'], OutputInterface::OUTPUT_RAW);
+        }
+        break;
+
+      case 'j':
+      case 'json':
+        $output->writeln(json_encode(array_values($tasks), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES), OutputInterface::OUTPUT_RAW);
+        break;
+
+      case 'x':
+      case 'xargs':
+        foreach ($tasks as $task) {
+          echo preg_replace('/^comex /', '', $task['cmd']) . "\n";
+        }
+        break;
+
+      default:
+        throw new \Exception("Unrecognized print format");
+    }
   }
 
 }
