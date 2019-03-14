@@ -12,4 +12,6 @@ is published as a `composer` package in the format `comex/<key>` (e.g. `comex/or
 
 ## Background/Goal
 
-* Get past the jam -- no easy way forward, bite the bullet
+Get past the log-jam -- we've stagnated because there's no easy+perfect
+solution to composer+extensions.  Bite the bullet and try a solution to
+the first obvious problem.
