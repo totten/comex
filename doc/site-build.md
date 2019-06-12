@@ -49,6 +49,7 @@ There are basically four possible answers, which stake different positions on th
 ```bash
 cd /var/www
 composer config repositories.comex composer <FIXME-URL>
+# FIXME (for local dev): composer config secure-http false
 composer require comex/uk.co.vedaconsulting.mosaico
 ```
 
@@ -58,6 +59,7 @@ composer require comex/uk.co.vedaconsulting.mosaico
 cd /var/www/sites/default/files/civicrm/ext
 composer init
 composer config repositories.comex composer <FIXME-URL>
+# FIXME (for local dev): composer config secure-http false
 composer require comex/uk.co.vedaconsulting.mosaico
 ```
 
@@ -66,6 +68,7 @@ composer require comex/uk.co.vedaconsulting.mosaico
 ```bash
 cd /var/www/sites/modules/civicrm
 composer config repositories.comex composer <FIXME-URL>
+# FIXME (for local dev): composer config secure-http false
 composer require comex/uk.co.vedaconsulting.mosaico
 ```
 
@@ -75,5 +78,6 @@ composer require comex/uk.co.vedaconsulting.mosaico
 cd /var/www/sites/../org.example.mymyext
 composer init
 composer config repositories.comex composer <FIXME-URL>
+# FIXME (for local dev): composer config secure-http false
 composer require comex/uk.co.vedaconsulting.mosaico
 ```
