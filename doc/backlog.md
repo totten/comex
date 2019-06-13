@@ -36,3 +36,5 @@
 
 * Announcement
    * Emphasize site-root and ext-root
+
+* Cleanup and unit-test for `/extdir/{FILTER}/single`

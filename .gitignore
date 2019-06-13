@@ -1,4 +1,9 @@
 /vendor
 /.idea
+/bin/doctrine-dbal
 *~
 /bin/phpunit
+/web/dist/
+/web/meta/
+/web/packages.json
+/var/comex.sqlite3
