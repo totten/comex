@@ -27,14 +27,16 @@
 
 * Should `civicrm.org` have a flag where publishers can choose which scanner to enable?
 
-* JS/CSS dependencies
+* JS/CSS dependencies - Auto run `npm install` or similar, but only bundle assets that are really needed
 
 * Classify extensions based on the risk-level of dependencies - and present differently in the UI, eg
    * No dependencies
    * Only Civi ext deps (transitively speaking)
    * Mix of PHP/library/Civi deps
 
-* Announcement
-   * Emphasize site-root and ext-root
+* Blog announcement
+   * Emphasize deployment scenarios, e.g. site-root and ext-root
 
-* Cleanup and unit-test for `/extdir/{FILTER}/single`
+* Cleanup and unit-test for `/extdir/{FILTER}/single` (JSON+XML)
+
+* (Maybe) Add support for legacy <=4.6 feed `/extdir/{FILTER]` (HTML+XML)
