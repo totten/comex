@@ -1,3 +1,7 @@
+# PROJECT MOVED
+
+This repo will no longer be updated. Please go to https://lab.civicrm.org/infra/comex
+
 # comex: CiviCRM-Composer Extension Publisher (Proof of Concept)
 
 `comex` is a system for publishing CiviCRM extensions as `composer` packages.
