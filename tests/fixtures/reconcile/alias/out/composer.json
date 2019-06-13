@@ -4,10 +4,10 @@
     "version": "2.0-beta4",
     "license": "AGPL-3.0",
     "require": {
-        "comex/org.civicrm.api4": "~4.3",
+        "civipkg/org.civicrm.api4": "~4.3",
         "intervention/image": "^2.4"
     },
     "replace": {
-        "comex/org.example.alias": "2.0-beta4"
+        "civipkg/org.example.alias": "2.0-beta4"
     }
 }

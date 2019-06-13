@@ -9,13 +9,13 @@ namespace Comex\Util;
  */
 class Naming {
 
-  const VENDOR = 'comex';
+  const VENDOR = 'civipkg';
 
   /**
    * @param string $key
    *   Ex: 'org.civicrm.foobar'
    * @return string
-   *   Ex: 'comex/org.civicrm.foobar'
+   *   Ex: 'civipkg/org.civicrm.foobar'
    */
   public static function xmlKeyToComposerPkg($key) {
     if (!preg_match('/^[a-z0-9\._\-]+$/', $key)) {
@@ -26,7 +26,7 @@ class Naming {
 
   /**
    * @param string $pkg
-   *   Ex: 'comex/org.civicrm.foobar'
+   *   Ex: 'civipkg/org.civicrm.foobar'
    *   Ex: 'symfony/console'
    * @return string|NULL
    *   Ex: 'org.civicrm.foobar'
@@ -60,7 +60,7 @@ class Naming {
 
   /**
    * @param string $pkg
-   *   Ex: 'comex/org.civicrm.foobar'
+   *   Ex: 'civipkg/org.civicrm.foobar'
    * @return bool
    */
   public static function isExtPkg($pkg) {

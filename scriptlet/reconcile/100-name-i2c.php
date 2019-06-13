@@ -3,7 +3,7 @@ use \Symfony\Component\Console\Output\OutputInterface;
 use \Comex\Util\Naming;
 
 /**
- * Map info.xml's "key" ("org.example.foo") to composer.json's "name" ("comex/org.example.foo").
+ * Map info.xml's "key" ("org.example.foo") to composer.json's "name" ("civipkg/org.example.foo").
  */
 return function (OutputInterface $output, SimpleXMLElement $infoXml, &$composerJson) {
 

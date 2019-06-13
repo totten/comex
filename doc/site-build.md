@@ -30,8 +30,8 @@ The idea here is pretty simple: *use `composer` to download extensions from `civ
 ## 1. Register the comex bridge
 composer config repositories.comex composer <FIXME-URL>
 
-## 2. Download the extension using the "comex/" prefix.
-composer require comex/uk.co.vedaconsulting.mosaico
+## 2. Download the extension using the "civipkg/" prefix.
+composer require civipkg/uk.co.vedaconsulting.mosaico
 ```
 
 Sounds easy, right?
@@ -50,7 +50,7 @@ There are basically four possible answers, which stake different positions on th
 cd /var/www
 composer config repositories.comex composer <FIXME-URL>
 # FIXME (for local dev): composer config secure-http false
-composer require comex/uk.co.vedaconsulting.mosaico
+composer require civipkg/uk.co.vedaconsulting.mosaico
 ```
 
 ## Deployment Scenario 2: Extension Root
@@ -60,7 +60,7 @@ cd /var/www/sites/default/files/civicrm/ext
 composer init
 composer config repositories.comex composer <FIXME-URL>
 # FIXME (for local dev): composer config secure-http false
-composer require comex/uk.co.vedaconsulting.mosaico
+composer require civipkg/uk.co.vedaconsulting.mosaico
 ```
 
 ## Deployment Scenario 3: CiviCRM Root
@@ -69,7 +69,7 @@ composer require comex/uk.co.vedaconsulting.mosaico
 cd /var/www/sites/modules/civicrm
 composer config repositories.comex composer <FIXME-URL>
 # FIXME (for local dev): composer config secure-http false
-composer require comex/uk.co.vedaconsulting.mosaico
+composer require civipkg/uk.co.vedaconsulting.mosaico
 ```
 
 ## Deployment Scenario 4: Per-Extension
@@ -79,5 +79,5 @@ cd /var/www/sites/../org.example.mymyext
 composer init
 composer config repositories.comex composer <FIXME-URL>
 # FIXME (for local dev): composer config secure-http false
-composer require comex/uk.co.vedaconsulting.mosaico
+composer require civipkg/uk.co.vedaconsulting.mosaico
 ```

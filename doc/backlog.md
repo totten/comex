@@ -27,10 +27,6 @@
 
 * Should `civicrm.org` have a flag where publishers can choose which scanner to enable?
 
-* Can we do a better naming convention? `comex` feels a little obscure. But `civicrm/` leads
-  to potential naming conflicts with some existing (non-extension) composer packages.
-  Maybe `c/` or `e/` or `cx/` or `xt/` or `civi/`.
-
 * JS/CSS dependencies
 
 * Classify extensions based on the risk-level of dependencies - and present differently in the UI, eg

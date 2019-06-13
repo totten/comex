@@ -1,5 +1,5 @@
 {
-    "name": "comex/org.example.mismatched",
+    "name": "civipkg/org.example.mismatched",
     "description": "Install the mismatched extension to mess things up",
     "version": "2.0-beta4",
     "license": "AGPL-3.0"

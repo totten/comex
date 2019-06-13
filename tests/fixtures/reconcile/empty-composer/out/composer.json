@@ -1,9 +1,9 @@
 {
-    "name": "comex/org.example.empty-composer",
+    "name": "civipkg/org.example.empty-composer",
     "description": "Install the empty-composer extension to mess things up",
     "version": "2.0-beta4",
     "license": "AGPL-3.0",
     "require": {
-        "comex/org.civicrm.flexmailer": "*"
+        "civipkg/org.civicrm.flexmailer": "*"
     }
 }
